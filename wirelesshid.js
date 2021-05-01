@@ -2,7 +2,7 @@
 
 /**
  * extension wireless-hid
- * JavaScript Gnome extension for wireless keyboards and mices.
+ * JavaScript Gnome extension for wireless keyboards and mice.
  *
  * @author Václav Chlumský
  * @copyright Copyright 2021, Václav Chlumský.
@@ -141,7 +141,6 @@ var HID =  GObject.registerClass({
 
     _update() {
         this.percentage = this.getBattery();
-        log(`${Me.metadata.name} ${this.model} percentage: ${this.percentage}`);
 
         if (this.label !== null) {
             this.label.text = `${this.percentage}%`;
@@ -312,7 +311,6 @@ var WirelessHID = GObject.registerClass({
             }
 
             if (!found) {
-                log(`${Me.metadata.name} device ${this._devices[j].model}, ${this._devices[j].nativePath} removed`);
                 this._devices[j].destroy();
                 delete(this._devices[j]);
             }
@@ -333,8 +331,6 @@ var WirelessHID = GObject.registerClass({
                 }
 
                 if (!exist) {
-                    log(`${Me.metadata.name} found new device ${devices[i].model}, ${devices[i].native_path}`);
-
                     this.newDevice(devices[i]);
                 }
 			}

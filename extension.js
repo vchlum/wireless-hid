@@ -2,7 +2,7 @@
 
 /**
  * extension wireless-hid
- * JavaScript Gnome extension for wireless keyboards and mices.
+ * JavaScript Gnome extension for wireless keyboards and mice.
  *
  * @author Václav Chlumský
  * @copyright Copyright 2021, Václav Chlumský.
