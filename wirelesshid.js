@@ -124,9 +124,7 @@ var HID =  GObject.registerClass({
             g = 165;
             b = 0;
         } else {
-            r = 0;
-            g = 255;
-            b = 0;
+            return null;
         }
 
         let color = new Clutter.Color({
@@ -150,7 +148,9 @@ var HID =  GObject.registerClass({
             this.icon.clear_effects();
 
             let colorEffect = this.getColorEffect(this.percentage);
-            this.icon.add_effect(colorEffect);
+            if (colorEffect) {
+                this.icon.add_effect(colorEffect);
+            }
         }
 
         this.emit('update');
