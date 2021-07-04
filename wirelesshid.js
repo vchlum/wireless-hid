@@ -161,10 +161,10 @@ var HID =  GObject.registerClass({
 
         if (this.kind === UPower.DeviceKind.KEYBOARD) {
             iconName = 'input-keyboard';
-        }
-
-        if (this.kind === UPower.DeviceKind.MOUSE) {
+        } else if (this.kind === UPower.DeviceKind.MOUSE) {
             iconName = 'input-mouse';
+        } else if (this.kind === UPower.DeviceKind.GAMING_INPUT) {
+            iconName = 'input-gaming';
         }
 
         this.icon = new St.Icon({
@@ -321,7 +321,8 @@ var WirelessHID = GObject.registerClass({
          */
         for (let i = 0; i < devices.length; i++) {
 			if (devices[i].kind === UPower.DeviceKind.KEYBOARD ||
-                devices[i].kind === UPower.DeviceKind.MOUSE) {
+                devices[i].kind === UPower.DeviceKind.MOUSE ||
+                devices[i].kind === UPower.DeviceKind.GAMING_INPUT) {
 
                 let exist = false; 
                 for (let j in this._devices) {
