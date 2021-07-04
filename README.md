@@ -10,7 +10,7 @@ wireless-hid shows the battery of the wireless keyboards and mice both in percen
 ## Manual installation
 
  1. `git clone https://github.com/vchlum/wireless-hid.git`
- 1. `cd hue-lights`
+ 1. `cd wireless-hid`
  1. `./release.sh`
  1. `gnome-extensions install wireless-hid@chlumskyvaclav.gmail.com.zip`
  1. Log out & Log in
