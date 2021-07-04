@@ -2,7 +2,7 @@
 ![screenshot](https://github.com/vchlum/wireless-hid/blob/main/screenshot.png)
 
 ## Gnome Shell extension
-wireless-hid shows the battery of the wireless keyboards and mice both in percentage and colors. Multiple devices are supported. This extension is inspired by the Keyboard battery extension on e.g.o.
+wireless-hid shows the battery of the wireless keyboards, mice, and game controllers in percentage and colors. Multiple devices are supported. This extension is inspired by the Keyboard battery extension on e.g.o.
 
 ## Troubleshoots 
  * Experiencing a problem, please check the tool upower -d. If you do not see the data/device with power, this extension will not recognize your device too.
