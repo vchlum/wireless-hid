@@ -7,7 +7,8 @@
     "shell-version": [
       "3.36",
       "3.38",
-      "40"
+      "40",
+      "41"
     ],
     "gettext-domain": "wireless-hid",
     "url": "https://github.com/vchlum/wireless-hid"
