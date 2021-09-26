@@ -44,18 +44,9 @@ const GObject = imports.gi.GObject;
 const UPower = imports.gi.UPowerGlib;
 const Clutter = imports.gi.Clutter;
 
-const UpowerXML ='<node>\
-   <interface name="org.freedesktop.UPower.Device">\
-      <property name="Type" type="u" access="read" />\
-      <property name="State" type="u" access="read" />\
-      <property name="Percentage" type="d" access="read" />\
-      <property name="TimeToEmpty" type="x" access="read" />\
-      <property name="TimeToFull" type="x" access="read" />\
-      <property name="IsPresent" type="b" access="read" />\
-      <property name="IconName" type="s" access="read" />\
-   </interface>\
-</node>';
-const PowerManagerProxy = Gio.DBusProxy.makeProxyWrapper(UpowerXML);
+const { loadInterfaceXML } = imports.misc.fileUtils;
+const DisplayDeviceInterface = loadInterfaceXML('org.freedesktop.UPower.Device');
+const PowerManagerProxy = Gio.DBusProxy.makeProxyWrapper(DisplayDeviceInterface);
 
 var HID =  GObject.registerClass({
     Signals: {
@@ -72,12 +63,13 @@ var HID =  GObject.registerClass({
         this.nativePath = device.native_path;
         this.icon = null;
         this.label = null;
+        this._proxy = null;
 
         this._createProxy();
     }
 
     _createProxy() {
-        let proxy = new	PowerManagerProxy(
+        this._proxy = new	PowerManagerProxy(
             Gio.DBus.system,
             'org.freedesktop.UPower',
             this.device.get_object_path(),
@@ -87,7 +79,7 @@ var HID =  GObject.registerClass({
                     return;
                 }
 
-                proxy.connect(
+                this._proxy.connect(
                     'g-properties-changed',
                     this._update.bind(this)
                 );
@@ -95,8 +87,6 @@ var HID =  GObject.registerClass({
                 this._update();
             }
         );
-
-        return proxy;
     }
 
     getBattery() {
