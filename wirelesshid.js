@@ -48,7 +48,7 @@ const { loadInterfaceXML } = imports.misc.fileUtils;
 const DisplayDeviceInterface = loadInterfaceXML('org.freedesktop.UPower.Device');
 const PowerManagerProxy = Gio.DBusProxy.makeProxyWrapper(DisplayDeviceInterface);
 
-var HID =  GObject.registerClass({
+var HID = GObject.registerClass({
     Signals: {
         "update": {},
         "destroy": {}
@@ -69,7 +69,7 @@ var HID =  GObject.registerClass({
     }
 
     _createProxy() {
-        this._proxy = new	PowerManagerProxy(
+        this._proxy = new PowerManagerProxy(
             Gio.DBus.system,
             'org.freedesktop.UPower',
             this.device.get_object_path(),
@@ -91,14 +91,14 @@ var HID =  GObject.registerClass({
 
     getBattery() {
 
-		try {
-			this.device.refresh_sync(null);
-		} catch (err) {
-			return -1;
-		}
+        try {
+            this.device.refresh_sync(null);
+        } catch (err) {
+            return -1;
+        }
 
-		return this.device.percentage;
-	}
+        return this.device.percentage;
+    }
 
     getColorEffect(percentage) {
         let r;
@@ -124,7 +124,7 @@ var HID =  GObject.registerClass({
             alpha: 255
         });
 
-        return new Clutter.ColorizeEffect({tint: color});
+        return new Clutter.ColorizeEffect({ tint: color });
     }
 
     _update() {
@@ -159,7 +159,7 @@ var HID =  GObject.registerClass({
 
         this.icon = new St.Icon({
             icon_name: iconName,
-			style_class: 'system-status-icon'
+            style_class: 'system-status-icon'
         });
 
         this._update();
@@ -188,18 +188,18 @@ var HID =  GObject.registerClass({
 
 /**
  * WirelessHID class. Provides widget.
- * 
+ *
  * @class PhueMenu
  * @constructor
  * @return {Object} menu widget instance
  */
 var WirelessHID = GObject.registerClass({
-     GTypeName: 'WirelessHID'
+    GTypeName: 'WirelessHID'
 }, class WirelessHID extends PanelMenu.Button {
 
     /**
      * WirelessHID class initialization
-     *  
+     *
      * @method _init
      * @private
      */
@@ -215,14 +215,14 @@ var WirelessHID = GObject.registerClass({
         this.add_child(this._panelBox);
 
         let uPowerProxy = new PowerManagerProxy(
-			Gio.DBus.system,
-			'org.freedesktop.UPower',
-			'/org/freedesktop/UPower',
-			(proxy,error)=>{
-					if (error) {
-						log(`${Me.metadata.name} error: ${error.message}`);
-					}
-			}
+            Gio.DBus.system,
+            'org.freedesktop.UPower',
+            '/org/freedesktop/UPower',
+            (proxy, error) => {
+                if (error) {
+                    log(`${Me.metadata.name} error: ${error.message}`);
+                }
+            }
         );
 
         let dbusCon = uPowerProxy.get_connection();
@@ -286,8 +286,8 @@ var WirelessHID = GObject.registerClass({
     }
 
     discoverDevices() {
-		let upowerClient = UPower.Client.new_full(null);
-		let devices = upowerClient.get_devices();
+        let upowerClient = UPower.Client.new_full(null);
+        let devices = upowerClient.get_devices();
 
         /**
          * remove old devices
@@ -302,7 +302,7 @@ var WirelessHID = GObject.registerClass({
 
             if (!found) {
                 this._devices[j].destroy();
-                delete(this._devices[j]);
+                delete (this._devices[j]);
             }
         }
 
@@ -310,11 +310,11 @@ var WirelessHID = GObject.registerClass({
          * discover new devices
          */
         for (let i = 0; i < devices.length; i++) {
-			if (devices[i].kind === UPower.DeviceKind.KEYBOARD ||
+            if (devices[i].kind === UPower.DeviceKind.KEYBOARD ||
                 devices[i].kind === UPower.DeviceKind.MOUSE ||
                 devices[i].kind === UPower.DeviceKind.GAMING_INPUT) {
 
-                let exist = false; 
+                let exist = false;
                 for (let j in this._devices) {
                     if (this._devices[j].nativePath === devices[i].native_path) {
                         exist = true;
@@ -324,8 +324,8 @@ var WirelessHID = GObject.registerClass({
                 if (!exist) {
                     this.newDevice(devices[i]);
                 }
-			}
-		}
+            }
+        }
 
         if (this._devices.length === 0) {
             this.visible = false;
