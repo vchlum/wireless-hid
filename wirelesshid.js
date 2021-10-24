@@ -310,6 +310,7 @@ var WirelessHID = GObject.registerClass({
          * discover new devices
          */
         for (let i = 0; i < devices.length; i++) {
+            if (devices[i].state === UPower.DeviceState.UNKNOWN) continue;
             if (devices[i].kind != UPower.DeviceKind.KEYBOARD &&
                 devices[i].kind != UPower.DeviceKind.MOUSE &&
                 devices[i].kind != UPower.DeviceKind.GAMING_INPUT) continue;
