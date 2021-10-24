@@ -310,20 +310,19 @@ var WirelessHID = GObject.registerClass({
          * discover new devices
          */
         for (let i = 0; i < devices.length; i++) {
-            if (devices[i].kind === UPower.DeviceKind.KEYBOARD ||
-                devices[i].kind === UPower.DeviceKind.MOUSE ||
-                devices[i].kind === UPower.DeviceKind.GAMING_INPUT) {
+            if (devices[i].kind != UPower.DeviceKind.KEYBOARD &&
+                devices[i].kind != UPower.DeviceKind.MOUSE &&
+                devices[i].kind != UPower.DeviceKind.GAMING_INPUT) continue;
 
-                let exist = false;
-                for (let j in this._devices) {
-                    if (this._devices[j].nativePath === devices[i].native_path) {
-                        exist = true;
-                    }
+            let exist = false;
+            for (let j in this._devices) {
+                if (this._devices[j].nativePath === devices[i].native_path) {
+                    exist = true;
                 }
+            }
 
-                if (!exist) {
-                    this.newDevice(devices[i]);
-                }
+            if (!exist) {
+                this.newDevice(devices[i]);
             }
         }
 
