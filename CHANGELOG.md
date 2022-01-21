@@ -1,3 +1,6 @@
+## Version 4
+ * hide panel icon without devices
+ * ignore ELAN devices
 ## Version 3
  * fix refreshing percentage
 ## Version 2
