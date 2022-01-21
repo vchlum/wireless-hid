@@ -326,10 +326,18 @@ var WirelessHID = GObject.registerClass({
             }
         }
 
-        if (this._devices.length === 0) {
-            this.visible = false;
+        this.checkVisibility();
+    }
+
+    checkVisibility() {
+        if (Main.panel.statusArea["wireless-hid"] === undefined) {
+            return;
+        }
+
+        if (Object.keys(this._devices).length === 0) {
+            Main.panel.statusArea["wireless-hid"].visible = false;
         } else {
-            this.visible = true;
+            Main.panel.statusArea["wireless-hid"].visible = true;
         }
     }
 });

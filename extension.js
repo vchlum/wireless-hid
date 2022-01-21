@@ -63,6 +63,7 @@ function enable() {
     hid = new WirelessHID.WirelessHID();
 
     Main.panel.addToStatusArea('wireless-hid', hid);
+    hid.checkVisibility();
 
     log(`enabling ${Me.metadata.name} version ${Me.metadata.version}`);
 }
