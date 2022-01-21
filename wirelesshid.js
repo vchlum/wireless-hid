@@ -314,6 +314,10 @@ var WirelessHID = GObject.registerClass({
                 devices[i].kind != UPower.DeviceKind.MOUSE &&
                 devices[i].kind != UPower.DeviceKind.GAMING_INPUT) continue;
 
+            if (devices[i].model.startsWith("ELAN")) {
+                continue;
+            }
+
             let exist = false;
             for (let j in this._devices) {
                 if (this._devices[j].nativePath === devices[i].native_path) {
