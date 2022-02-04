@@ -7,6 +7,12 @@ wireless-hid shows the battery of the wireless keyboards, mice, and game control
 ## Troubleshoots 
  * Experiencing a problem, please check the tool upower -d. If you do not see the data/device with power, this extension will not recognize your device too.
 
+## Supported Gnome Shell version
+This extension supports Gnome Shell verison 3.36 and above.
+
+## Installation from e.g.o
+https://extensions.gnome.org/extension/4228/wireless-hid/
+
 ## Manual installation
 
  1. `git clone https://github.com/vchlum/wireless-hid.git`
