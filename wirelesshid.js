@@ -149,16 +149,41 @@ var HID = GObject.registerClass({
     createIcon() {
         let iconName;
 
-        if (this.kind === UPower.DeviceKind.KEYBOARD) {
-            iconName = 'input-keyboard';
-        } else if (this.kind === UPower.DeviceKind.MOUSE) {
-            iconName = 'input-mouse';
-        } else if (this.kind === UPower.DeviceKind.GAMING_INPUT) {
-            iconName = 'input-gaming';
+        switch (this.kind) {
+            //case UPower.DeviceKind.BATTERY:
+            //case UPower.DeviceKind.BLUETOOTH_GENERIC:
+            case UPower.DeviceKind.CAMERA: iconName = 'camera-photo'; break;
+            case UPower.DeviceKind.COMPUTER: iconName = 'computer'; break;
+            case UPower.DeviceKind.GAMING_INPUT: iconName = 'input-gaming'; break;
+            case UPower.DeviceKind.HEADPHONES: iconName = 'audio-headphones'; break;
+            case UPower.DeviceKind.HEADSET: iconName = 'audio-headset'; break;
+            case UPower.DeviceKind.KEYBOARD: iconName = 'input-keyboard'; break;
+            case UPower.DeviceKind.LINE_POWER: iconName = 'battery-full-charged'; break;
+            case UPower.DeviceKind.MEDIA_PLAYER: iconName = 'multimedia-player'; break;
+            case UPower.DeviceKind.MODEM: iconName = 'modem'; break;
+            case UPower.DeviceKind.MONITOR: iconName = 'video-display'; break;
+            case UPower.DeviceKind.MOUSE: iconName = 'input-mouse'; break;
+            case UPower.DeviceKind.NETWORK: iconName = 'network-workgroup'; break;
+            case UPower.DeviceKind.OTHER_AUDIO: iconName = 'audio-card'; break;
+            case UPower.DeviceKind.PDA: iconName = 'pda'; break;
+            case UPower.DeviceKind.PEN: iconName = 'document-edit'; break;
+            case UPower.DeviceKind.PHONE: iconName = 'phone'; break;
+            case UPower.DeviceKind.PRINTER: iconName = 'printer'; break;
+            case UPower.DeviceKind.REMOTE_CONTROL: iconName = 'accessories-calculator'; break;
+            case UPower.DeviceKind.SCANNER: iconName = 'scanner'; break;
+            case UPower.DeviceKind.SPEAKERS: iconName = 'audio-speakers'; break;
+            case UPower.DeviceKind.TABLET: iconName = 'input-tablet'; break;
+            case UPower.DeviceKind.TOUCHPAD: iconName = 'input-touchpad'; break;
+            case UPower.DeviceKind.TOY: iconName = 'applications-games'; break;
+            //case UPower.DeviceKind.UNKNOWN:
+            case UPower.DeviceKind.UPS: iconName = 'uninterruptible-power-supply'; break;
+            case UPower.DeviceKind.VIDEO: iconName = 'camera-video'; break;
+            //case UPower.DeviceKind.WEARABLE:
+            default: iconName = 'battery';
         }
 
         this.icon = new St.Icon({
-            icon_name: iconName,
+            icon_name: iconName+'-symbolic',
             style_class: 'system-status-icon'
         });
 
@@ -310,10 +335,6 @@ var WirelessHID = GObject.registerClass({
          * discover new devices
          */
         for (let i = 0; i < devices.length; i++) {
-            if (devices[i].kind != UPower.DeviceKind.KEYBOARD &&
-                devices[i].kind != UPower.DeviceKind.MOUSE &&
-                devices[i].kind != UPower.DeviceKind.GAMING_INPUT) continue;
-
             if (devices[i].model.startsWith("ELAN")) {
                 continue;
             }
