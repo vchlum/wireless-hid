@@ -339,6 +339,10 @@ var WirelessHID = GObject.registerClass({
                 continue;
             }
 
+            if (devices[i].kind === UPower.DeviceKind.BATTERY) {
+                continue;
+            }
+
             if (devices[i].model.length === 0) {
                 continue;
             }
