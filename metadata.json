@@ -2,13 +2,14 @@
     "uuid": "wireless-hid@chlumskyvaclav.gmail.com",
     "name": "Wireless HID",
     "description": "This extension shows the battery of the wireless keyboards, mice, and game controllers in percentages and colors. Multiple devices are supported.",
-    "version": 4,
+    "version": 5,
     "original-author": "chlumskyvaclav@gmail.com",
     "shell-version": [
       "3.36",
       "3.38",
       "40",
-      "41"
+      "41",
+      "42"
     ],
     "gettext-domain": "wireless-hid",
     "url": "https://github.com/vchlum/wireless-hid"

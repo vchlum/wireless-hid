@@ -1,3 +1,6 @@
+## Version 5
+ * add multiple devices
+ * add gnome 42 support
 ## Version 4
  * hide panel icon without devices
  * ignore ELAN devices
