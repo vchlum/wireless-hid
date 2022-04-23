@@ -49,8 +49,6 @@ var hid; /* main widget */
 function init() {
 
     ExtensionUtils.initTranslations();
-
-    log(`initializing ${Me.metadata.name} version ${Me.metadata.version}`);
 }
 
 /**
@@ -64,8 +62,6 @@ function enable() {
 
     Main.panel.addToStatusArea('wireless-hid', hid);
     hid.checkVisibility();
-
-    log(`enabling ${Me.metadata.name} version ${Me.metadata.version}`);
 }
 
 /**
@@ -77,6 +73,4 @@ function enable() {
 function disable() {
 
     hid.destroy();
-
-    log(`disabling ${Me.metadata.name} version ${Me.metadata.version}`);
 }
