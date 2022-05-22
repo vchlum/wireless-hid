@@ -1,3 +1,5 @@
+## Version 6
+ * fix battery sync
 ## Version 5
  * add multiple devices
  * add gnome 42 support
