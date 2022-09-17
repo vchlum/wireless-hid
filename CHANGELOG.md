@@ -1,3 +1,5 @@
+## Version 7
+ * add gnome 43 as supported
 ## Version 6
  * fix battery sync
 ## Version 5
