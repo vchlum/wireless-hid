@@ -175,6 +175,10 @@ var HID = GObject.registerClass({
             default: iconName = 'battery';
         }
 
+        // Workaround for mouse recognized as keyboard
+        if (this.model.includes('Mouse'))
+            iconName = 'input-mouse';
+
         this.icon = new St.Icon({
             icon_name: iconName+'-symbolic',
             style_class: 'system-status-icon'
