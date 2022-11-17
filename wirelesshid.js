@@ -344,6 +344,10 @@ var WirelessHID = GObject.registerClass({
                 continue;
             }
 
+            if (devices[i].state === 0 && devices[i].iconName === "battery-missing-symbolic") {
+                continue;
+            }
+
             let exist = false;
             for (let j in this._devices) {
                 if (this._devices[j].nativePath === devices[i].native_path) {
