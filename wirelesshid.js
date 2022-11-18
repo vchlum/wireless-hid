@@ -344,7 +344,13 @@ var WirelessHID = GObject.registerClass({
                 continue;
             }
 
-            if (devices[i].state === 0 && devices[i].iconName === "battery-missing-symbolic") {
+            if (devices[i].is_present === false) {
+                continue;
+            }
+
+            //Some devices report 'present' as true, even if no battery is present
+            //Instead, check the state and icon name to try and find these
+            if (devices[i].state === UPower.DeviceState.UNKNOWN && devices[i].iconName === "battery-missing-symbolic") {
                 continue;
             }
 
