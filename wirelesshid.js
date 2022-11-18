@@ -51,6 +51,8 @@ const PowerManagerProxy = Gio.DBusProxy.makeProxyWrapper(DisplayDeviceInterface)
 var HID = GObject.registerClass({
     Signals: {
         "update": {},
+        "show": {},
+        "hide": {},
         "destroy": {}
     }
 }, class HID extends GObject.Object {
@@ -64,6 +66,8 @@ var HID = GObject.registerClass({
         this.icon = null;
         this.label = null;
         this._proxy = null;
+        this.isBatteryPresent = null;
+        this.visible = null;
 
         this._createProxy();
     }
@@ -120,12 +124,31 @@ var HID = GObject.registerClass({
         return new Clutter.ColorizeEffect({tint: color});
     }
 
-    _update() {
+    _checkBatteryPresent() {
+        let isBatteryPresent = true;
+        if (this.device.is_present === false) {
+            isBatteryPresent = false;
+        }
+
+        //Some devices report 'present' as true, even if no battery is present
+        //Instead, check the state and icon name to try and find these
+        if (this.device.state === UPower.DeviceState.UNKNOWN && this.device.iconName === "battery-missing-symbolic") {
+            isBatteryPresent = false;
+        }
+
+        return isBatteryPresent;
+    }
+
+    _updateLabel() {
         this.percentage = this.getBattery();
 
         if (this.label !== null) {
             this.label.text = `${this.percentage}%`;
         }
+    }
+
+    _update() {
+        this._updateLabel();
 
         if (this.icon !== null) {
             this.icon.clear_effects();
@@ -136,7 +159,24 @@ var HID = GObject.registerClass({
             }
         }
 
+        this.isBatteryPresent = this._checkBatteryPresent();
+        if (this.visible !== null) {
+            if (this.isBatteryPresent) {
+                this.showIndicator();
+            } else {
+                this.hideIndicator();
+            }
+        }
+
         this.emit('update');
+    }
+
+    showIndicator() {
+      this.emit('show')
+    }
+
+    hideIndicator() {
+      this.emit('hide')
     }
 
     createIcon() {
@@ -198,7 +238,7 @@ var HID = GObject.registerClass({
 
         this.label.set_x_expand(false);
 
-        this._update();
+        this._updateLabel();
 
         return this.label;
     }
@@ -272,13 +312,7 @@ var WirelessHID = GObject.registerClass({
         this.discoverDevices();
     }
 
-    newDevice(device) {
-
-        this._devices[device.native_path] = new HID(device);
-
-        let icon = this._devices[device.native_path].createIcon();
-        this._panelBox.add(icon);
-
+    createItem(deviceEntry) {
         let item = new PopupMenu.PopupMenuItem(
             _("N/A")
         );
@@ -286,23 +320,61 @@ var WirelessHID = GObject.registerClass({
         item.remove_child(item.label);
 
         let name = new St.Label({
-            text: `${this._devices[device.native_path].model}:`,
+            text: `${deviceEntry.model}:`,
             y_align: Clutter.ActorAlign.CENTER,
             x_align: Clutter.ActorAlign.START
         });
         name.set_x_expand(true);
         item.add(name);
 
-        let label = this._devices[device.native_path].createLabel()
+        let label = deviceEntry.createLabel()
         item.add(label);
 
+        return item;
+    }
+
+    newDevice(device) {
+
+        this._devices[device.native_path] = new HID(device);
+
+        let icon = this._devices[device.native_path].createIcon();
+        this._panelBox.add(icon);
+
+        let item = this.createItem(this._devices[device.native_path]);
+
         this.menu.addMenuItem(item);
+        this._devices[device.native_path].visible = true;
+
+        this._devices[device.native_path].connect("show",
+            () => {
+                if (!this._devices[device.native_path].visible) {
+                  item = this.createItem(this._devices[device.native_path]);
+                  this._panelBox.add(icon);
+                  this.menu.addMenuItem(item);
+                  this._devices[device.native_path].visible = true;
+                }
+            }
+        );
+
+        this._devices[device.native_path].connect("hide",
+            () => {
+                this._panelBox.remove_child(icon);
+                item.destroy();
+                this._devices[device.native_path].visible = false;
+            }
+        );
+
+        if (!this._devices[device.native_path].isBatteryPresent) {
+            this._devices[device.native_path].hideIndicator();
+        }
 
         this._devices[device.native_path].connect("destroy",
             () => {
-                this._panelBox.remove_child(icon);
+                if (this._devices[device.native_path].visible) {
+                  this._panelBox.remove_child(icon);
+                  item.destroy();
+                }
                 icon.destroy();
-                item.destroy();
             }
         );
     }
@@ -344,16 +416,6 @@ var WirelessHID = GObject.registerClass({
                 continue;
             }
 
-            if (devices[i].is_present === false) {
-                continue;
-            }
-
-            //Some devices report 'present' as true, even if no battery is present
-            //Instead, check the state and icon name to try and find these
-            if (devices[i].state === UPower.DeviceState.UNKNOWN && devices[i].iconName === "battery-missing-symbolic") {
-                continue;
-            }
-
             let exist = false;
             for (let j in this._devices) {
                 if (this._devices[j].nativePath === devices[i].native_path) {
@@ -374,10 +436,18 @@ var WirelessHID = GObject.registerClass({
             return;
         }
 
-        if (Object.keys(this._devices).length === 0) {
-            Main.panel.statusArea["wireless-hid"].visible = false;
-        } else {
+        let showDevices = false;
+        for (let i in this._devices) {
+            if (this._devices[i].visible) {
+                showDevices = true;
+                break;
+            }
+        }
+
+        if (showDevices) {
             Main.panel.statusArea["wireless-hid"].visible = true;
+        } else {
+            Main.panel.statusArea["wireless-hid"].visible = false;
         }
     }
 });
