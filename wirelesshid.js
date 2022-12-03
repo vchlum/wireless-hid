@@ -64,6 +64,7 @@ var HID = GObject.registerClass({
         this.kind = device.kind;
         this.nativePath = device.native_path;
         this.icon = null;
+        this.item = null;
         this.label = null;
         this._proxy = null;
         this.isBatteryPresent = null;
@@ -87,8 +88,6 @@ var HID = GObject.registerClass({
                     'g-properties-changed',
                     this._update.bind(this)
                 );
-
-                this._update();
             }
         );
     }
@@ -161,9 +160,9 @@ var HID = GObject.registerClass({
 
         this.isBatteryPresent = this._checkBatteryPresent();
         if (this.visible !== null) {
-            if (this.isBatteryPresent) {
+            if (this.isBatteryPresent && !this.visible) {
                 this.emit('show');
-            } else {
+            } else if (!this.isBatteryPresent && this.visible){
                 this.emit('hide');
             }
         }
@@ -216,9 +215,27 @@ var HID = GObject.registerClass({
             style_class: 'system-status-icon'
         });
 
-        this._update();
-
         return this.icon;
+    }
+
+    createItem() {
+        this.item = new PopupMenu.PopupMenuItem(
+            _("N/A")
+        );
+
+        this.item.remove_child(this.item.label);
+
+        let name = new St.Label({
+            text: `${this.model}:`,
+            y_align: Clutter.ActorAlign.CENTER,
+            x_align: Clutter.ActorAlign.START
+        });
+        name.set_x_expand(true);
+        this.item.add(name);
+
+        this.item.add(this.createLabel());
+
+        return this.item;
     }
 
     createLabel() {
@@ -229,8 +246,6 @@ var HID = GObject.registerClass({
         });
 
         this.label.set_x_expand(false);
-
-        this._updateLabel();
 
         return this.label;
     }
@@ -304,54 +319,36 @@ var WirelessHID = GObject.registerClass({
         this.discoverDevices();
     }
 
-    createItem(deviceEntry) {
-        let item = new PopupMenu.PopupMenuItem(
-            _("N/A")
-        );
-
-        item.remove_child(item.label);
-
-        let name = new St.Label({
-            text: `${deviceEntry.model}:`,
-            y_align: Clutter.ActorAlign.CENTER,
-            x_align: Clutter.ActorAlign.START
-        });
-        name.set_x_expand(true);
-        item.add(name);
-
-        let label = deviceEntry.createLabel()
-        item.add(label);
-
-        return item;
-    }
-
     newDevice(device) {
-
         this._devices[device.native_path] = new HID(device);
 
         let icon = this._devices[device.native_path].createIcon();
+        let item = this._devices[device.native_path].createItem();
         this._panelBox.add(icon);
-
-        let item = this.createItem(this._devices[device.native_path]);
-
         this.menu.addMenuItem(item);
         this._devices[device.native_path].visible = true;
+        this._devices[device.native_path]._update();
 
         this._devices[device.native_path].connect("show",
             () => {
                 if (!this._devices[device.native_path].visible) {
-                  item = this.createItem(this._devices[device.native_path]);
+                  let icon = this._devices[device.native_path].createIcon();
+                  let item = this._devices[device.native_path].createItem();
                   this._panelBox.add(icon);
                   this.menu.addMenuItem(item);
                   this._devices[device.native_path].visible = true;
                 }
+                this._devices[device.native_path]._update();
             }
         );
 
         this._devices[device.native_path].connect("hide",
             () => {
-                this._panelBox.remove_child(icon);
-                item.destroy();
+                this._panelBox.remove_child(this._devices[device.native_path].icon);
+                this._devices[device.native_path].item.destroy();
+                this._devices[device.native_path].icon = null;
+                this._devices[device.native_path].item = null;
+                this._devices[device.native_path].label = null;
                 this._devices[device.native_path].visible = false;
             }
         );
