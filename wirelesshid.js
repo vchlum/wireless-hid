@@ -162,21 +162,13 @@ var HID = GObject.registerClass({
         this.isBatteryPresent = this._checkBatteryPresent();
         if (this.visible !== null) {
             if (this.isBatteryPresent) {
-                this.showIndicator();
+                this.emit('show');
             } else {
-                this.hideIndicator();
+                this.emit('hide');
             }
         }
 
         this.emit('update');
-    }
-
-    showIndicator() {
-      this.emit('show')
-    }
-
-    hideIndicator() {
-      this.emit('hide')
     }
 
     createIcon() {
