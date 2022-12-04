@@ -347,6 +347,7 @@ var WirelessHID = GObject.registerClass({
         this._devices[device.native_path].connect("hide",
             () => {
                 this._panelBox.remove_child(this._devices[device.native_path].icon);
+                this._devices[device.native_path].icon.destroy();
                 this._devices[device.native_path].item.destroy();
                 this._devices[device.native_path].icon = null;
                 this._devices[device.native_path].item = null;
@@ -363,9 +364,13 @@ var WirelessHID = GObject.registerClass({
             () => {
                 if (this._devices[device.native_path].visible) {
                   this._panelBox.remove_child(this._devices[device.native_path].icon);
+                  this._devices[device.native_path].icon.destroy();
                   this._devices[device.native_path].item.destroy();
+                  this._devices[device.native_path].icon = null;
+                  this._devices[device.native_path].item = null;
+                  this._devices[device.native_path].label = null;
+                  this._devices[device.native_path].visible = false;
                 }
-                this._devices[device.native_path].icon.destroy();
             }
         );
     }
