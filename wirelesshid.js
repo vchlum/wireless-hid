@@ -353,10 +353,6 @@ var WirelessHID = GObject.registerClass({
             }
         );
 
-        if (!this._devices[device.native_path].isBatteryPresent) {
-            this._devices[device.native_path].hideIndicator();
-        }
-
         this._devices[device.native_path].connect("destroy",
             () => {
                 if (this._devices[device.native_path].visible) {
