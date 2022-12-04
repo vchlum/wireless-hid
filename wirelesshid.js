@@ -331,7 +331,6 @@ var WirelessHID = GObject.registerClass({
         this._panelBox.add(icon);
         this.menu.addMenuItem(item);
         this._devices[device.native_path].visible = true;
-        this._devices[device.native_path]._update();
 
         this._devices[device.native_path].connect("show",
             () => {
@@ -356,6 +355,9 @@ var WirelessHID = GObject.registerClass({
                 this.checkVisibility();
             }
         );
+
+        //Refresh device with signals now connected
+        this._devices[device.native_path]._update();
 
         this._devices[device.native_path].connect("destroy",
             () => {
