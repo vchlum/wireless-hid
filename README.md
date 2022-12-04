@@ -21,3 +21,10 @@ https://extensions.gnome.org/extension/4228/wireless-hid/
  1. `gnome-extensions install wireless-hid@chlumskyvaclav.gmail.com.zip`
  1. Log out & Log in
  1. `gnome-extensions enable wireless-hid@chlumskyvaclav.gmail.com`
+
+## Install dependencies:
+  - gnome-shell (`gnome-extensions` command)
+  - libglib2.0-bin
+
+## Development dependencies: (Only required if running `./update-ui.sh`)
+  - libgtk-4-bin (`make gtk4`)
