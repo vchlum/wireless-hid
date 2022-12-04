@@ -132,10 +132,9 @@ var HID = GObject.registerClass({
         }
 
         //Some devices report 'present' as true, even if no battery is present
-        //Instead, check the state and icon name to try and find these
-        //As this is device specific work-around, it's a user setting
+        //To try work-around this, hide devices with an unknown battery state if enabled
         if (ExtensionSettings.get_boolean('hide-unknown-battery-state')) {
-            if (this.device.state === UPower.DeviceState.UNKNOWN && this.device.iconName === "battery-missing-symbolic") {
+            if (this.device.state === UPower.DeviceState.UNKNOWN) {
                 isBatteryPresent = false;
             }
         }
