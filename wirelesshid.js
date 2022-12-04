@@ -48,6 +48,8 @@ const { loadInterfaceXML } = imports.misc.fileUtils;
 const DisplayDeviceInterface = loadInterfaceXML('org.freedesktop.UPower.Device');
 const PowerManagerProxy = Gio.DBusProxy.makeProxyWrapper(DisplayDeviceInterface);
 
+const ExtensionSettings = ExtensionUtils.getSettings();
+
 var HID = GObject.registerClass({
     Signals: {
         "update": {},
@@ -131,8 +133,11 @@ var HID = GObject.registerClass({
 
         //Some devices report 'present' as true, even if no battery is present
         //Instead, check the state and icon name to try and find these
-        if (this.device.state === UPower.DeviceState.UNKNOWN && this.device.iconName === "battery-missing-symbolic") {
-            isBatteryPresent = false;
+        //As this is device specific work-around, it's a user setting
+        if (ExtensionSettings.get_boolean('hide-unknown-battery-state')) {
+            if (this.device.state === UPower.DeviceState.UNKNOWN && this.device.iconName === "battery-missing-symbolic") {
+                isBatteryPresent = false;
+            }
         }
 
         return isBatteryPresent;
