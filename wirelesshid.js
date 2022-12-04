@@ -343,6 +343,7 @@ var WirelessHID = GObject.registerClass({
                   this._devices[device.native_path].visible = true;
                 }
                 this._devices[device.native_path]._update();
+                this.checkVisibility();
             }
         );
 
@@ -354,6 +355,7 @@ var WirelessHID = GObject.registerClass({
                 this._devices[device.native_path].item = null;
                 this._devices[device.native_path].label = null;
                 this._devices[device.native_path].visible = false;
+                this.checkVisibility();
             }
         );
 
@@ -426,12 +428,13 @@ var WirelessHID = GObject.registerClass({
         }
 
         let showDevices = false;
-        for (let i in this._devices) {
-            if (this._devices[i].visible) {
-                showDevices = true;
-                break;
+        Object.keys(this._devices).forEach(
+            (key) => {
+                if (this._devices[key].visible) {
+                  showDevices = true;
+                }
             }
-        }
+        );
 
         if (showDevices) {
             Main.panel.statusArea["wireless-hid"].visible = true;
