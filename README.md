@@ -28,3 +28,9 @@ https://extensions.gnome.org/extension/4228/wireless-hid/
 
 ## Development dependencies: (Only required if running `./update-ui.sh`)
   - libgtk-4-bin (`make gtk4`)
+
+## Extension settings:
+  > Hide unknown battery states:
+  - Some devices misreport disconnected batteries as connected
+    - To work around this, devices with un unknown battery state can optionally be hidden
+    - This is off by default, as it can cause issues and hide some worknig devices
