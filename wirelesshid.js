@@ -71,6 +71,9 @@ var HID = GObject.registerClass({
         this._proxy = null;
         this.isBatteryPresent = null;
         this.visible = null;
+        this._signals = {};
+
+        this._settings = ExtensionUtils.getSettings("org.gnome.shell.extensions.wireless-hid");
 
         this._createProxy();
     }
@@ -86,10 +89,21 @@ var HID = GObject.registerClass({
                     return;
                 }
 
-                this._proxy.connect(
+                let signal;
+
+                signal = this._proxy.connect(
                     'g-properties-changed',
                     this._update.bind(this)
                 );
+
+                this._signals[signal] = this._proxy;
+
+                signal = this._settings.connect(
+                    "changed",
+                    this._update.bind(this)
+                );
+
+                this._signals[signal] = this._settings;
             }
         );
     }
@@ -133,7 +147,7 @@ var HID = GObject.registerClass({
 
         //Some devices report 'present' as true, even if no battery is present
         //To try work-around this, hide devices with an unknown battery state if enabled
-        if (ExtensionSettings.get_boolean('hide-unknown-battery-state')) {
+        if (this._settings.get_boolean('hide-unknown-battery-state')) {
             if (this.device.state === UPower.DeviceState.UNKNOWN) {
                 isBatteryPresent = false;
             }
@@ -255,6 +269,12 @@ var HID = GObject.registerClass({
     }
 
     destroy() {
+        for (signal in this._signals) {
+            this._signals[signal].disconnect(signal);
+        }
+
+        this._signals = {};
+
         this.emit('destroy');
     }
 });
