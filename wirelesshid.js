@@ -282,8 +282,10 @@ var WirelessHID = GObject.registerClass({
 
         this._devices = {};
 
-        this._panelBox = new St.BoxLayout();
+        this._panelBox = new St.BoxLayout({style_class: 'panel-status-menu-box'});
         this._panelBox.horizontal = true;
+
+        this.style = `-natural-hpadding: 6px; -minimum-hpadding: 6px;`;
 
         this.add_child(this._panelBox);
 
