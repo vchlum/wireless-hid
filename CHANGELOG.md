@@ -1,3 +1,5 @@
+## Version 8
+ * add preferences dialog (Big thx to @stuarthayhurst)
 ## Version 7
  * add gnome 43 as supported
 ## Version 6
