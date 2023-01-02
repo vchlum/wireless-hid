@@ -6,5 +6,10 @@
       <summary>Hide devices with an unknown battery state (may cause issues)</summary>
       <description>Some devices misreport the battery state, this setting attempts to detect and hide these (may cause issues)</description>
     </key>
+    <key name="hide-elan" type="b">
+      <default>false</default>
+      <summary>Hide ELAN devices</summary>
+      <description>Some ELAN devices do not show a battery state. This option allows hiding such devices.</description>
+    </key>
   </schema>
 </schemalist>

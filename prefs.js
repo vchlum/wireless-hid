@@ -30,6 +30,10 @@ var PrefsPages = class PrefsPages {
       'hide-unknown-states-switch': {
         'settingKey': 'hide-unknown-battery-state',
         'bindProperty': 'active'
+      },
+      'hide-elan-switch': {
+        'settingKey': 'hide-elan',
+        'bindProperty': 'active'
       }
     }
 

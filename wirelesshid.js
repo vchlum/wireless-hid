@@ -153,6 +153,12 @@ var HID = GObject.registerClass({
             }
         }
 
+        if (this._settings.get_boolean('hide-elan')) {
+            if (this.device.model.startsWith("ELAN")) {
+                isBatteryPresent = false;
+            }
+        }
+
         return isBatteryPresent;
     }
 
@@ -422,10 +428,6 @@ var WirelessHID = GObject.registerClass({
          * discover new devices
          */
         for (let i = 0; i < devices.length; i++) {
-            if (devices[i].model.startsWith("ELAN")) {
-                continue;
-            }
-
             if (devices[i].kind === UPower.DeviceKind.BATTERY) {
                 continue;
             }
