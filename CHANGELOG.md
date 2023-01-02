@@ -1,3 +1,6 @@
+## Version 9
+ * add posibility to hide ELAN devices
+ * hide tray icon fix
 ## Version 8
  * add preferences dialog (Big thx to @stuarthayhurst)
 ## Version 7
