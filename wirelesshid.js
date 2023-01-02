@@ -275,7 +275,7 @@ var HID = GObject.registerClass({
     }
 
     destroy() {
-        for (signal in this._signals) {
+        for (let signal in this._signals) {
             this._signals[signal].disconnect(signal);
         }
 
