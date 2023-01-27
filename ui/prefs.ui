@@ -147,6 +147,7 @@
                   <object class="GtkListBoxRow">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
+                    <property name="tooltip-text" translatable="yes">Some ELAN devices do not show a battery state, this setting allows hiding such devices</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
