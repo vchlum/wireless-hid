@@ -153,13 +153,14 @@
                                 <property name="hexpand">1</property>
                                 <property name="valign">center</property>
                                 <property name="margin-start">10</property>
-                                <property name="label" translatable="1">Hide old devices after a timeout</property>
+                                <property name="label" translatable="1">Hide old devices after a timeout (seconds)</property>
                                 <property name="xalign">0</property>
                               </object>
                             </child>
                             <child>
                               <object class="GtkSpinButton" id="device-update-timeout-entry">
                                 <property name="focusable">1</property>
+                                <property name="tooltip-text" translatable="1">Set to 0 to disable</property>
                                 <property name="margin-end">10</property>
                                 <property name="adjustment">device-timeout-adjustment</property>
                                 <property name="numeric">1</property>

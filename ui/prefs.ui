@@ -242,7 +242,7 @@
                                 <property name="can-focus">False</property>
                                 <property name="valign">center</property>
                                 <property name="margin-start">10</property>
-                                <property name="label" translatable="yes">Hide old devices after a timeout</property>
+                                <property name="label" translatable="yes">Hide old devices after a timeout (seconds)</property>
                                 <property name="xalign">0</property>
                               </object>
                               <packing>
@@ -255,6 +255,7 @@
                               <object class="GtkSpinButton" id="device-update-timeout-entry">
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
+                                <property name="tooltip-text" translatable="yes">Set to 0 to disable</property>
                                 <property name="margin-end">10</property>
                                 <property name="adjustment">device-timeout-adjustment</property>
                                 <property name="numeric">True</property>
