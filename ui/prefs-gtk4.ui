@@ -79,6 +79,16 @@
                   <object class="GtkListBoxRow">
                     <property name="focusable">1</property>
                     <property name="tooltip-text" translatable="1" comments="This is a tooltip">Some ELAN devices do not show a battery state. This option allows hiding such devices.</property>
+                    <property name="activatable">0</property>
+                    <property name="selectable">0</property>
+                    <property name="child">
+                      <object class="GtkSeparator"/>
+                    </property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkListBoxRow">
+                    <property name="focusable">1</property>
                     <property name="child">
                       <object class="GtkBox">
                         <property name="margin-top">12</property>
