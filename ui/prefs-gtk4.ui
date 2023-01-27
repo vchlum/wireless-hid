@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface domain="">
   <requires lib="gtk" version="4.0"/>
+  <object class="GtkAdjustment" id="device-timeout-adjustment">
+    <property name="upper">99999</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
   <object class="GtkBox" id="main-prefs">
     <property name="margin-top">12</property>
     <property name="margin-bottom">10</property>
@@ -153,11 +158,12 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkSwitch" id="hide-elan-switch1">
+                              <object class="GtkSpinButton" id="device-update-timeout-entry">
                                 <property name="focusable">1</property>
-                                <property name="valign">center</property>
                                 <property name="margin-end">10</property>
-                                <property name="active">1</property>
+                                <property name="adjustment">device-timeout-adjustment</property>
+                                <property name="numeric">1</property>
+                                <property name="update-policy">if-valid</property>
                               </object>
                             </child>
                           </object>
