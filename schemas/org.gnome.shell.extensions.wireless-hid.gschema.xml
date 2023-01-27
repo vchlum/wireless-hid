@@ -13,7 +13,7 @@
     </key>
     <key name="device-update-timeout" type="i">
       <default>0</default>
-      <summary>Hide old devices after a timeout</summary>
+      <summary>Hide old devices after a timeout (seconds)</summary>
       <description>Some devices don't disconnect, this setting allows setting a timeout to hide them if they haven't updated recently</description>
     </key>
   </schema>
