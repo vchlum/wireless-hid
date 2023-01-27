@@ -40,6 +40,7 @@ const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 const St = imports.gi.St;
 const Gio = imports.gi.Gio;
+const GLib = imports.gi.GLib;
 const GObject = imports.gi.GObject;
 const UPower = imports.gi.UPowerGlib;
 const Clutter = imports.gi.Clutter;
@@ -72,6 +73,7 @@ var HID = GObject.registerClass({
         this.isBatteryPresent = null;
         this.visible = null;
         this._signals = {};
+        this._timeoutUpdateTimeoutId = null;
 
         this._settings = ExtensionUtils.getSettings("org.gnome.shell.extensions.wireless-hid");
 
@@ -93,14 +95,14 @@ var HID = GObject.registerClass({
 
                 signal = this._proxy.connect(
                     'g-properties-changed',
-                    this._update.bind(this)
+                    this.refresh.bind(this)
                 );
 
                 this._signals[signal] = this._proxy;
 
                 signal = this._settings.connect(
                     "changed",
-                    this._update.bind(this)
+                    this.refresh.bind(this)
                 );
 
                 this._signals[signal] = this._settings;
@@ -168,6 +170,26 @@ var HID = GObject.registerClass({
         if (this.label !== null) {
             this.label.text = `${this.percentage}%`;
         }
+    }
+
+    refresh() {
+        //If a timeout is already set, remove it
+        if (this._timeoutUpdateTimeoutId != null) {
+            GLib.Source.remove(this._timeoutUpdateTimeoutId);
+            this._timeoutUpdateTimeoutId = null;
+        }
+
+        //If enabled, create a timer to hide the device if it's not cancelled by an update
+        let deviceTimeoutLength = this._settings.get_int('device-update-timeout') * 1000;
+        if (deviceTimeoutLength != 0) {
+            this._timeoutUpdateTimeoutId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, deviceTimeoutLength, () => {
+                this.emit('hide')
+                this._timeoutUpdateTimeoutId = null;
+                return GLib.SOURCE_REMOVE;
+            });
+        }
+
+        this._update();
     }
 
     _update() {
@@ -281,6 +303,10 @@ var HID = GObject.registerClass({
 
         this._signals = {};
 
+        if (this._timeoutUpdateTimeoutId != null) {
+            GLib.Source.remove(this._timeoutUpdateTimeoutId);
+        }
+
         this.emit('destroy');
     }
 });
@@ -367,6 +393,7 @@ var WirelessHID = GObject.registerClass({
                   this.menu.addMenuItem(this._devices[device.native_path].createItem());
                   this._devices[device.native_path].visible = true;
                 }
+                //Uses _update() to avoid cutting timeout short
                 this._devices[device.native_path]._update();
                 this.checkVisibility();
             }
@@ -386,7 +413,7 @@ var WirelessHID = GObject.registerClass({
         );
 
         //Refresh device with signals now connected
-        this._devices[device.native_path]._update();
+        this._devices[device.native_path].refresh();
 
         this._devices[device.native_path].connect("destroy",
             () => {
