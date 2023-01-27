@@ -34,10 +34,14 @@ var PrefsPages = class PrefsPages {
       'hide-elan-switch': {
         'settingKey': 'hide-elan',
         'bindProperty': 'active'
+      },
+      'device-timeout-adjustment': {
+        'settingKey': 'device-update-timeout',
+        'bindProperty': 'value'
       }
     }
 
-    //Loop through settings toggles and dropdowns and bind together
+    //Loop through settings toggles and inputs and bind together
     Object.keys(this.settingElements).forEach((element) => {
       this._settings.bind(
         this.settingElements[element].settingKey, //GSettings key to bind to
