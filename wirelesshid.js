@@ -256,6 +256,10 @@ var HID = GObject.registerClass({
         if (this.model.includes('Mouse'))
             iconName = 'input-mouse';
 
+        // Workaround for controller recognized as keyboard
+        if (this.model.includes('Controller'))
+            iconName = 'input-gaming';
+
         this.icon = new St.Icon({
             icon_name: iconName+'-symbolic',
             style_class: 'system-status-icon'
