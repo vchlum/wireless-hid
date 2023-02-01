@@ -9,7 +9,12 @@
     <key name="hide-elan" type="b">
       <default>false</default>
       <summary>Hide ELAN devices</summary>
-      <description>Some ELAN devices do not show a battery state. This option allows hiding such devices.</description>
+      <description>Some ELAN devices do not show a battery state, this setting allows hiding such devices</description>
+    </key>
+    <key name="device-update-timeout" type="i">
+      <default>0</default>
+      <summary>Hide old devices after a timeout (seconds)</summary>
+      <description>Some devices don't disconnect, this setting allows setting a timeout to hide them if they haven't updated recently</description>
     </key>
   </schema>
 </schemalist>

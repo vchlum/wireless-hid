@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface domain="">
-  <requires lib="gtk+" version="4.0"/>
+  <requires lib="gtk" version="4.0"/>
+  <object class="GtkAdjustment" id="device-timeout-adjustment">
+    <property name="lower">0</property>
+    <property name="upper">99999</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
   <object class="GtkBox" id="main-prefs">
     <property name="orientation">vertical</property>
     <property name="spacing">15</property>
@@ -105,9 +111,62 @@
                     <child>
                       <object class="GtkSwitch" id="hide-elan-switch">
                         <property name="valign">center</property>
+                        <property name="hexpand">1</property>
+                        <property name="halign">end</property>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkListBoxRow">
+                <property name="activatable">0</property>
+                <property name="selectable">0</property>
+                <property name="child">
+                  <object class="GtkSeparator"/>
+                </property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkListBoxRow">
+                <property name="selectable">0</property>
+                <property name="child">
+                  <object class="GtkBox">
+                    <property name="margin-start">7</property>
+                    <property name="margin-end">7</property>
+                    <property name="margin-top">7</property>
+                    <property name="margin-bottom">7</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                          <child>
+                            <object class="GtkLabel">
+                              <property name="label" translatable="yes">Hide old devices after a timeout (seconds)</property>
+                              <property name="halign">start</property>
+                            </object>
+                          </child>
+                          <child>
+                            <object class="GtkLabel">
+                              <property name="label" translatable="yes">Some devices don&apos;t disconnect, this setting allows setting a timeout to hide them if they haven&apos;t updated recently</property>
+                              <property name="halign">start</property>
+                              <style>
+                                <class name="dim-label"/>
+                                <class name="smaller-label"/>
+                              </style>
+                            </object>
+                          </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSpinButton" id="device-update-timeout-entry">
+                        <property name="tooltip-text" translatable="1">Set to 0 to disable</property>
                         <property name="valign">center</property>
                         <property name="hexpand">1</property>
                         <property name="halign">end</property>
+                        <property name="adjustment">device-timeout-adjustment</property>
+                        <property name="numeric">1</property>
+                        <property name="update-policy">if-valid</property>
                       </object>
                     </child>
                   </object>

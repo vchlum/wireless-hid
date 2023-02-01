@@ -84,6 +84,10 @@ var PrefsPage = class PrefsPage {
             'hide-elan-switch': {
                 'settingKey': 'hide-elan',
                 'bindProperty': 'active'
+            },
+            'device-timeout-adjustment': {
+                'settingKey': 'device-update-timeout',
+                'bindProperty': 'value'
             }
         }
 
@@ -106,7 +110,7 @@ function init() {
 //Create preferences window for GNOME 42+
 function fillPreferencesWindow(window) {
     let prefsPage = new PrefsPage();
-    window.set_default_size(600, 290);
+    window.set_default_size(600, 355);
     window.add(prefsPage.preferencesWidget);
 }
 
@@ -122,9 +126,9 @@ function buildPrefsWidget() {
         let window = ShellVersion >= 40 ? prefsPage.preferencesWidget.get_root() :
             prefsPage.preferencesWidget.get_toplevel();
         if (ShellVersion >= 40) {
-            window.set_default_size(600, 205);
+            window.set_default_size(600, 270);
         } else {
-            window.resize(600, 205);
+            window.resize(600, 270);
         }
     });
 
