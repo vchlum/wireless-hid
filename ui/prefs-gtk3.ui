@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface domain="">
-  <requires lib="gtk" version="4.0"/>
+  <requires lib="gtk" version="3.24"/>
   <object class="GtkAdjustment" id="device-timeout-adjustment">
     <property name="lower">0</property>
     <property name="upper">99999</property>
@@ -25,13 +25,15 @@
     </child>
     <child>
       <object class="GtkFrame">
-        <property name="child">
+        <property name="can-focus">false</property>
+        <property name="shadow-type">in</property>
+        <child>
           <object class="GtkListBox">
             <property name="selection-mode">none</property>
             <child>
               <object class="GtkListBoxRow">
                 <property name="selectable">0</property>
-                <property name="child">
+                <child>
                   <object class="GtkBox">
                     <property name="margin-start">7</property>
                     <property name="margin-end">7</property>
@@ -66,22 +68,22 @@
                       </object>
                     </child>
                   </object>
-                </property>
+                </child>
               </object>
             </child>
             <child>
               <object class="GtkListBoxRow">
                 <property name="activatable">0</property>
                 <property name="selectable">0</property>
-                <property name="child">
+                <child>
                   <object class="GtkSeparator"/>
-                </property>
+                </child>
               </object>
             </child>
             <child>
               <object class="GtkListBoxRow">
                 <property name="selectable">0</property>
-                <property name="child">
+                <child>
                   <object class="GtkBox">
                     <property name="margin-start">7</property>
                     <property name="margin-end">7</property>
@@ -116,22 +118,22 @@
                       </object>
                     </child>
                   </object>
-                </property>
+                </child>
               </object>
             </child>
             <child>
               <object class="GtkListBoxRow">
                 <property name="activatable">0</property>
                 <property name="selectable">0</property>
-                <property name="child">
+                <child>
                   <object class="GtkSeparator"/>
-                </property>
+                </child>
               </object>
             </child>
             <child>
               <object class="GtkListBoxRow">
                 <property name="selectable">0</property>
-                <property name="child">
+                <child>
                   <object class="GtkBox">
                     <property name="margin-start">7</property>
                     <property name="margin-end">7</property>
@@ -170,11 +172,11 @@
                       </object>
                     </child>
                   </object>
-                </property>
+                </child>
               </object>
             </child>
           </object>
-        </property>
+        </child>
       </object>
     </child>
   </object>
