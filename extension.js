@@ -62,6 +62,10 @@ function enable() {
 
     Main.panel.addToStatusArea('wireless-hid', hid);
     hid.checkVisibility();
+
+    /* Get stored settings and change actor position in panel */
+    hid._getPrefs();
+    hid._resetPanelPos();
 }
 
 /**

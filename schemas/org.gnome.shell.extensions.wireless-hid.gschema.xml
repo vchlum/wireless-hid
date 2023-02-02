@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
+  <enum id="org.gnome.shell.extensions.wireless-hid.position">
+    <value value="0" nick="Left"/>
+    <value value="1" nick="Center"/>
+    <value value="2" nick="Right"/>
+  </enum>
   <schema id="org.gnome.shell.extensions.wireless-hid" path="/org/gnome/shell/extensions/wireless-hid/">
     <key name="hide-unknown-battery-state" type="b">
       <default>false</default>
@@ -15,6 +20,15 @@
       <default>0</default>
       <summary>Hide old devices after a timeout (seconds)</summary>
       <description>Some devices don't disconnect, this setting allows setting a timeout to hide them if they haven't updated recently</description>
+    </key>
+    <key name="position-in-panel" enum="org.gnome.shell.extensions.wireless-hid.position">
+      <default>'Right'</default>
+        <summary>Position in Panel</summary>
+    </key>
+    <key name="panel-box-index" type="i">
+      <default>0</default>
+      <summary>Index in panel box</summary>
+      <description>Index within the selected panel box (0: first, 1: second, ..., -1: last)</description>
     </key>
   </schema>
 </schemalist>
