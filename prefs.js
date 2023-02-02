@@ -88,6 +88,14 @@ var PrefsPage = class PrefsPage {
             'device-timeout-adjustment': {
                 'settingKey': 'device-update-timeout',
                 'bindProperty': 'value'
+            },
+            'panel-position-selector': {
+                'settingKey': 'position-in-panel',
+                'bindProperty': 'active-id'
+            },
+            'panel-box-index': {
+                'settingKey': 'panel-box-index',
+                'bindProperty': 'value'
             }
         }
 
@@ -110,7 +118,7 @@ function init() {
 //Create preferences window for GNOME 42+
 function fillPreferencesWindow(window) {
     let prefsPage = new PrefsPage();
-    window.set_default_size(600, 355);
+    window.set_default_size(600, 435);
     window.add(prefsPage.preferencesWidget);
 }
 
@@ -126,9 +134,9 @@ function buildPrefsWidget() {
         let window = ShellVersion >= 40 ? prefsPage.preferencesWidget.get_root() :
             prefsPage.preferencesWidget.get_toplevel();
         if (ShellVersion >= 40) {
-            window.set_default_size(600, 270);
+            window.set_default_size(600, 325);
         } else {
-            window.resize(600, 270);
+            window.resize(600, 325);
         }
     });
 
