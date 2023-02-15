@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface domain="">
-  <requires lib="gtk+" version="4.0"/>
+  <requires lib="gtk" version="4.0"/>
   <object class="GtkAdjustment" id="device-timeout-adjustment">
-    <property name="lower">0</property>
     <property name="upper">99999</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
@@ -22,7 +21,7 @@
     <property name="margin-end">24</property>
     <child>
       <object class="GtkLabel">
-        <property name="label" translatable="yes">General settings</property>
+        <property name="label" translatable="1">General settings</property>
         <property name="xalign">0</property>
         <style>
           <class name="bold-label"/>
@@ -48,13 +47,13 @@
                         <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkLabel">
-                            <property name="label" translatable="yes">Hide devices with an unknown battery state (may cause issues)</property>
+                            <property name="label" translatable="1">Hide devices with an unknown battery state (may cause issues)</property>
                             <property name="halign">start</property>
                           </object>
                         </child>
                         <child>
                           <object class="GtkLabel">
-                            <property name="label" translatable="yes">Some devices misreport the battery state, this setting attempts to detect and hide these</property>
+                            <property name="label" translatable="1">Some devices misreport the battery state, this setting attempts to detect and hide these</property>
                             <property name="halign">start</property>
                             <style>
                               <class name="dim-label"/>
@@ -98,13 +97,13 @@
                         <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkLabel">
-                            <property name="label" translatable="yes">Hide ELAN devices</property>
+                            <property name="label" translatable="1">Hide ELAN devices</property>
                             <property name="halign">start</property>
                           </object>
                         </child>
                         <child>
                           <object class="GtkLabel">
-                            <property name="label" translatable="yes">Some ELAN devices do not show a battery state. This option allows hiding such devices</property>
+                            <property name="label" translatable="1">Some ELAN devices do not show a battery state. This option allows hiding such devices</property>
                             <property name="halign">start</property>
                             <style>
                               <class name="dim-label"/>
@@ -148,13 +147,13 @@
                         <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkLabel">
-                            <property name="label" translatable="yes">Hide old devices after a timeout (seconds)</property>
+                            <property name="label" translatable="1">Hide old devices after a timeout (seconds)</property>
                             <property name="halign">start</property>
                           </object>
                         </child>
                         <child>
                           <object class="GtkLabel">
-                            <property name="label" translatable="yes">Some devices don&apos;t disconnect, this setting allows setting a timeout to hide them if they haven&apos;t updated recently</property>
+                            <property name="label" translatable="1">Some devices don&apos;t disconnect, this setting allows setting a timeout to hide them if they haven&apos;t updated recently</property>
                             <property name="halign">start</property>
                             <style>
                               <class name="dim-label"/>
@@ -200,22 +199,22 @@
                     <child>
                       <object class="GtkBox">
                         <property name="orientation">vertical</property>
-                          <child>
-                            <object class="GtkLabel">
-                              <property name="label" translatable="yes">Position in top panel</property>
-                              <property name="halign">start</property>
-                            </object>
-                          </child>
-                          <child>
-                            <object class="GtkLabel">
-                              <property name="label" translatable="yes">Manualy change the position in top panel (0 = default position)</property>
-                              <property name="halign">start</property>
-                              <style>
-                                <class name="dim-label"/>
-                                <class name="smaller-label"/>
-                              </style>
-                            </object>
-                          </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="1">Position in top panel</property>
+                            <property name="halign">start</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="1">Manualy change the position in top panel (0 = default position)</property>
+                            <property name="halign">start</property>
+                            <style>
+                              <class name="dim-label"/>
+                              <class name="smaller-label"/>
+                            </style>
+                          </object>
+                        </child>
                       </object>
                     </child>
                     <child>
@@ -248,4 +247,3 @@
     </child>
   </object>
 </interface>
-

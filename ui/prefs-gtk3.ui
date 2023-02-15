@@ -14,6 +14,7 @@
     <property name="page-increment">10</property>
   </object>
   <object class="GtkBox" id="main-prefs">
+    <property name="visible">True</property>
     <property name="orientation">vertical</property>
     <property name="spacing">15</property>
     <property name="margin-top">30</property>
@@ -22,6 +23,7 @@
     <property name="margin-end">24</property>
     <child>
       <object class="GtkLabel">
+        <property name="visible">True</property>
         <property name="label" translatable="yes">General settings</property>
         <property name="xalign">0</property>
         <style>
@@ -31,31 +33,37 @@
     </child>
     <child>
       <object class="GtkFrame">
+        <property name="visible">True</property>
         <property name="can-focus">false</property>
-        <property name="shadow-type">in</property>
         <child>
           <object class="GtkListBox">
+            <property name="visible">True</property>
             <property name="selection-mode">none</property>
             <child>
               <object class="GtkListBoxRow">
+                <property name="visible">True</property>
                 <property name="selectable">0</property>
                 <child>
                   <object class="GtkBox">
+                    <property name="visible">True</property>
                     <property name="margin-start">7</property>
                     <property name="margin-end">7</property>
                     <property name="margin-top">7</property>
                     <property name="margin-bottom">7</property>
                     <child>
                       <object class="GtkBox">
+                        <property name="visible">True</property>
                         <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkLabel">
+                            <property name="visible">True</property>
                             <property name="label" translatable="yes">Hide devices with an unknown battery state (may cause issues)</property>
                             <property name="halign">start</property>
                           </object>
                         </child>
                         <child>
                           <object class="GtkLabel">
+                            <property name="visible">True</property>
                             <property name="label" translatable="yes">Some devices misreport the battery state, this setting attempts to detect and hide these</property>
                             <property name="halign">start</property>
                             <style>
@@ -68,6 +76,7 @@
                     </child>
                     <child>
                       <object class="GtkSwitch" id="hide-unknown-states-switch">
+                        <property name="visible">True</property>
                         <property name="valign">center</property>
                         <property name="hexpand">1</property>
                         <property name="halign">end</property>
@@ -79,33 +88,41 @@
             </child>
             <child>
               <object class="GtkListBoxRow">
+                <property name="visible">True</property>
                 <property name="activatable">0</property>
                 <property name="selectable">0</property>
                 <child>
-                  <object class="GtkSeparator"/>
+                  <object class="GtkSeparator">
+                    <property name="visible">True</property>
+                  </object>
                 </child>
               </object>
             </child>
             <child>
               <object class="GtkListBoxRow">
+                <property name="visible">True</property>
                 <property name="selectable">0</property>
                 <child>
                   <object class="GtkBox">
+                    <property name="visible">True</property>
                     <property name="margin-start">7</property>
                     <property name="margin-end">7</property>
                     <property name="margin-top">7</property>
                     <property name="margin-bottom">7</property>
                     <child>
                       <object class="GtkBox">
+                        <property name="visible">True</property>
                         <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkLabel">
+                            <property name="visible">True</property>
                             <property name="label" translatable="yes">Hide ELAN devices</property>
                             <property name="halign">start</property>
                           </object>
                         </child>
                         <child>
                           <object class="GtkLabel">
+                            <property name="visible">True</property>
                             <property name="label" translatable="yes">Some ELAN devices do not show a battery state. This option allows hiding such devices</property>
                             <property name="halign">start</property>
                             <style>
@@ -118,6 +135,7 @@
                     </child>
                     <child>
                       <object class="GtkSwitch" id="hide-elan-switch">
+                        <property name="visible">True</property>
                         <property name="valign">center</property>
                         <property name="hexpand">1</property>
                         <property name="halign">end</property>
@@ -129,33 +147,41 @@
             </child>
             <child>
               <object class="GtkListBoxRow">
+                <property name="visible">True</property>
                 <property name="activatable">0</property>
                 <property name="selectable">0</property>
                 <child>
-                  <object class="GtkSeparator"/>
+                  <object class="GtkSeparator">
+                    <property name="visible">True</property>
+                  </object>
                 </child>
               </object>
             </child>
             <child>
               <object class="GtkListBoxRow">
+                <property name="visible">True</property>
                 <property name="selectable">0</property>
                 <child>
                   <object class="GtkBox">
+                    <property name="visible">True</property>
                     <property name="margin-start">7</property>
                     <property name="margin-end">7</property>
                     <property name="margin-top">7</property>
                     <property name="margin-bottom">7</property>
                     <child>
                       <object class="GtkBox">
+                        <property name="visible">True</property>
                         <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkLabel">
+                            <property name="visible">True</property>
                             <property name="label" translatable="yes">Hide old devices after a timeout (seconds)</property>
                             <property name="halign">start</property>
                           </object>
                         </child>
                         <child>
                           <object class="GtkLabel">
+                            <property name="visible">True</property>
                             <property name="label" translatable="yes">Some devices don&apos;t disconnect, this setting allows setting a timeout to hide them if they haven&apos;t updated recently</property>
                             <property name="halign">start</property>
                             <style>
@@ -168,6 +194,7 @@
                     </child>
                     <child>
                       <object class="GtkSpinButton" id="device-update-timeout-entry">
+                        <property name="visible">True</property>
                         <property name="tooltip-text" translatable="1">Set to 0 to disable</property>
                         <property name="valign">center</property>
                         <property name="hexpand">1</property>
@@ -183,33 +210,41 @@
             </child>
             <child>
               <object class="GtkListBoxRow">
+                <property name="visible">True</property>
                 <property name="activatable">0</property>
                 <property name="selectable">0</property>
                 <child>
-                  <object class="GtkSeparator"/>
+                  <object class="GtkSeparator">
+                    <property name="visible">True</property>
+                  </object>
                 </child>
               </object>
             </child>
             <child>
               <object class="GtkListBoxRow">
+                <property name="visible">True</property>
                 <property name="selectable">0</property>
                 <child>
                   <object class="GtkBox">
+                    <property name="visible">True</property>
                     <property name="margin-start">7</property>
                     <property name="margin-end">7</property>
                     <property name="margin-top">7</property>
                     <property name="margin-bottom">7</property>
                     <child>
                       <object class="GtkBox">
+                        <property name="visible">True</property>
                         <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkLabel">
+                            <property name="visible">True</property>
                             <property name="label" translatable="yes">Position in top panel</property>
                             <property name="halign">start</property>
                           </object>
                         </child>
                         <child>
                           <object class="GtkLabel">
+                            <property name="visible">True</property>
                             <property name="label" translatable="yes">Manualy change the position in top panel (0 = default position)</property>
                             <property name="halign">start</property>
                             <style>
@@ -222,6 +257,7 @@
                     </child>
                     <child>
                       <object class="GtkComboBoxText" id="panel-position-selector">
+                        <property name="visible">True</property>
                         <property name="valign">center</property>
                         <property name="hexpand">1</property>
                         <property name="halign">end</property>
@@ -234,6 +270,7 @@
                     </child>
                     <child>
                       <object class="GtkSpinButton" id="panel-box-index">
+                        <property name="visible">True</property>
                         <property name="valign">center</property>
                         <property name="adjustment">panel-box-index-adjustment</property>
                         <property name="numeric">1</property>

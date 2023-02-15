@@ -134,9 +134,9 @@ function buildPrefsWidget() {
         let window = ShellVersion >= 40 ? prefsPage.preferencesWidget.get_root() :
             prefsPage.preferencesWidget.get_toplevel();
         if (ShellVersion >= 40) {
-            window.set_default_size(600, 325);
+            window.set_default_size(600, 435);
         } else {
-            window.resize(600, 325);
+            window.resize(600, 435);
         }
     });
 
