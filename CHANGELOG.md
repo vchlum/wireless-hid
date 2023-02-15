@@ -1,3 +1,6 @@
+## Version 10
+ * feature to change the position in top panel
+ * improved preferences UI
 ## Version 9
  * add posibility to hide ELAN devices
  * hide tray icon fix
