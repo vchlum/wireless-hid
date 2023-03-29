@@ -1,3 +1,5 @@
+## Version 11
+ * add Gnome 44 support
 ## Version 10
  * feature to change the position in top panel
  * improved preferences UI
