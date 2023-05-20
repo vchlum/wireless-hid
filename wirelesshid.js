@@ -70,8 +70,8 @@ var HID = GObject.registerClass({
         this.item = null;
         this.label = null;
         this._proxy = null;
-        this.isBatteryPresent = null;
-        this.visible = null;
+        this.isBatteryPresent = false;
+        this.visible = false;
         this._signals = {};
         this._timeoutUpdateTimeoutId = null;
 
@@ -205,12 +205,11 @@ var HID = GObject.registerClass({
         }
 
         this.isBatteryPresent = this._checkBatteryPresent();
-        if (this.visible !== null) {
-            if (this.isBatteryPresent && !this.visible) {
-                this.emit('show');
-            } else if (!this.isBatteryPresent && this.visible){
-                this.emit('hide');
-            }
+
+        if (this.isBatteryPresent && !this.visible) {
+            this.emit('show');
+        } else if (!this.isBatteryPresent && this.visible){
+            this.emit('hide');
         }
 
         this.emit('update');
@@ -300,16 +299,25 @@ var HID = GObject.registerClass({
         return this.label;
     }
 
+    clean() {
+        this.icon.destroy();
+        this.item.destroy();
+        this.icon = null;
+        this.item = null;
+        this.label = null;
+        this.visible = false;
+    }
+
     destroy() {
+        if (this._timeoutUpdateTimeoutId != null) {
+            GLib.Source.remove(this._timeoutUpdateTimeoutId);
+        }
+
         for (let signal in this._signals) {
             this._signals[signal].disconnect(signal);
         }
 
         this._signals = {};
-
-        if (this._timeoutUpdateTimeoutId != null) {
-            GLib.Source.remove(this._timeoutUpdateTimeoutId);
-        }
 
         this.emit('destroy');
     }
@@ -395,10 +403,8 @@ var WirelessHID = GObject.registerClass({
     newDevice(device) {
         this._devices[device.native_path] = new HID(device);
 
-        let icon = this._devices[device.native_path].createIcon();
-        let item = this._devices[device.native_path].createItem();
-        this._panelBox.add(icon);
-        this.menu.addMenuItem(item);
+        this._panelBox.add(this._devices[device.native_path].createIcon());
+        this.menu.addMenuItem(this._devices[device.native_path].createItem());
         this._devices[device.native_path].visible = true;
 
         this._devices[device.native_path].connect("show",
@@ -417,12 +423,7 @@ var WirelessHID = GObject.registerClass({
         this._devices[device.native_path].connect("hide",
             () => {
                 this._panelBox.remove_child(this._devices[device.native_path].icon);
-                this._devices[device.native_path].icon.destroy();
-                this._devices[device.native_path].item.destroy();
-                this._devices[device.native_path].icon = null;
-                this._devices[device.native_path].item = null;
-                this._devices[device.native_path].label = null;
-                this._devices[device.native_path].visible = false;
+                this._devices[device.native_path].clean();
                 this.checkVisibility();
             }
         );
@@ -434,12 +435,8 @@ var WirelessHID = GObject.registerClass({
             () => {
                 if (this._devices[device.native_path].visible) {
                   this._panelBox.remove_child(this._devices[device.native_path].icon);
-                  this._devices[device.native_path].icon.destroy();
-                  this._devices[device.native_path].item.destroy();
-                  this._devices[device.native_path].icon = null;
-                  this._devices[device.native_path].item = null;
-                  this._devices[device.native_path].label = null;
-                  this._devices[device.native_path].visible = false;
+                  this._devices[device.native_path].clean();
+                  this.checkVisibility();
                 }
             }
         );
