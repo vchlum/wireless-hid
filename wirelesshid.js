@@ -454,6 +454,7 @@ var WirelessHID = GObject.registerClass({
             for (let i = 0; i < devices.length; i++) {
                 if (this._devices[j].nativePath === devices[i].native_path) {
                     found = true;
+                    break;
                 }
             }
 
@@ -479,6 +480,7 @@ var WirelessHID = GObject.registerClass({
             for (let j in this._devices) {
                 if (this._devices[j].nativePath === devices[i].native_path) {
                     exist = true;
+                    break;
                 }
             }
 
