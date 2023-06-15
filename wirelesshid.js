@@ -522,6 +522,10 @@ var WirelessHID = GObject.registerClass({
             this._settings = null;
         }
 
+        for (let deviceId in this._devices) {
+          this._devices[deviceId].destroy();
+        }
+
         super._onDestroy();
     }
 
