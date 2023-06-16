@@ -14,13 +14,12 @@ This extension supports Gnome Shell verison 3.36 and above.
 https://extensions.gnome.org/extension/4228/wireless-hid/
 
 ## Manual installation
-
- 1. `git clone https://github.com/vchlum/wireless-hid.git`
- 1. `cd wireless-hid`
- 1. `./release.sh`
- 1. `gnome-extensions install wireless-hid@chlumskyvaclav.gmail.com.zip`
- 1. Log out & Log in
- 1. `gnome-extensions enable wireless-hid@chlumskyvaclav.gmail.com`
+  - `git clone https://github.com/vchlum/wireless-hid.git`
+  - `cd wireless-hid`
+  - `make build`
+  - `make install`
+  - Log out & log in
+  - `gnome-extensions enable wireless-hid@chlumskyvaclav.gmail.com`
 
 ## Install dependencies:
   - gnome-shell (`gnome-extensions` command)
