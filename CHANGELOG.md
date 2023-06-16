@@ -1,3 +1,5 @@
+## Version 12
+ * fix destroying of devices on disabling (thx to @stuarthayhurst)
 ## Version 11
  * add Gnome 44 support
 ## Version 10
