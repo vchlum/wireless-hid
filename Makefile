@@ -2,7 +2,6 @@ SHELL = bash
 UUID = wireless-hid@chlumskyvaclav.gmail.com
 
 BUILD_DIR ?= build
-UI_FILES = $(wildcard ./extension/ui/gtk3/*.ui)
 PNG_FILES = $(wildcard ./docs/*.png)
 RAW_PATH = "$(BUILD_DIR)/$(UUID).shell-extension.zip"
 BUNDLE_PATH = "$(BUILD_DIR)/$(UUID).zip"
