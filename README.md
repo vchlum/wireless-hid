@@ -26,8 +26,8 @@ https://extensions.gnome.org/extension/4228/wireless-hid/
   - gnome-shell (`gnome-extensions` command)
   - libglib2.0-bin
 
-## Development dependencies: (Only required if running `./update-ui.sh`)
-  - libgtk-4-bin (`make gtk4`)
+## Development dependencies: (Only required for `make gtk4`)
+  - libgtk-4-bin
 
 ## Extension settings:
   > Hide unknown battery states:
