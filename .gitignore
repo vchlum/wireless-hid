@@ -1,5 +1,6 @@
 wireless-hid@chlumskyvaclav.gmail.com.zip
 schemas/gschemas.compiled
+build/
 
 *.po~
 *.ui~
