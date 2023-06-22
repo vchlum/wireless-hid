@@ -27,6 +27,8 @@
   - `gnome-extensions enable wireless-hid@chlumskyvaclav.gmail.com`
 
 ## Install dependencies
+  - These are only required to install from source
+  - `make`
   - `gnome-shell` (`gnome-extensions` command)
   - `libglib2.0-bin`
 
