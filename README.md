@@ -42,3 +42,11 @@
   - Some devices misreport disconnected batteries as connected
     - To work around this, devices with un unknown battery state can optionally be hidden
     - This is off by default, as it can cause issues and hide some working devices
+  > Hide ELAN devices:
+  - Some ELAN devices don't report a charge
+    - This setting hides these devices:
+  > Hide old devices after a timeout
+  - Some devices don't disconnect correctly
+    - This setting hides devices that don't update after a length of time
+  > Position in top panel:
+  - Manually change the position in the top panel
