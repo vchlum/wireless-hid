@@ -1,17 +1,22 @@
 # wireless-hid
 ![screenshot](https://github.com/vchlum/wireless-hid/blob/main/screenshot.png)
 
-## Gnome Shell extension
-wireless-hid shows the battery of the wireless keyboards, mice, and game controllers in percentage and colors. Multiple devices are supported. This extension is inspired by the Keyboard battery extension on e.g.o.
+## GNOME Shell extension
+  - wireless-hid shows the battery of the wireless keyboards, mice, and game controllers
+    - Displays battery percentage with coloured status indicators
+    - Supports multiple devices
+  - Supports GNOME 3.36+
+  - Inspired by the Keyboard battery extension on e.g.o
 
-## Troubleshoots 
- * Experiencing a problem, please check the tool upower -d. If you do not see the data/device with power, this extension will not recognize your device too.
-
-## Supported Gnome Shell version
-This extension supports Gnome Shell verison 3.36 and above.
+## Troubleshooting
+  - This extension simply displays information from `upower`
+  - If you have a problem, please check `upower -d`
+    - If the information there matches the extension, the extension is behaving correctly
+    - If the information and extension don't match, report an issue [here](https://github.com/vchlum/wireless-hid/issues)
+  - If your device isn't recognised by `upower`, there's nothing the extension can do
 
 ## Installation from e.g.o
-https://extensions.gnome.org/extension/4228/wireless-hid/
+  - Install from [here](https://extensions.gnome.org/extension/4228/wireless-hid/)
 
 ## Manual installation
   - `git clone https://github.com/vchlum/wireless-hid.git`
@@ -21,15 +26,17 @@ https://extensions.gnome.org/extension/4228/wireless-hid/
   - Log out & log in
   - `gnome-extensions enable wireless-hid@chlumskyvaclav.gmail.com`
 
-## Install dependencies:
-  - gnome-shell (`gnome-extensions` command)
-  - libglib2.0-bin
+## Install dependencies
+  - `gnome-shell` (`gnome-extensions` command)
+  - `libglib2.0-bin`
 
-## Development dependencies: (Only required for `make gtk4`)
-  - libgtk-4-bin
+## Development dependencies
+  - This is only required for the `gtk4` build target
+    - If you don't know what that is, you don't need this
+  - `libgtk-4-bin`
 
 ## Extension settings:
   > Hide unknown battery states:
   - Some devices misreport disconnected batteries as connected
     - To work around this, devices with un unknown battery state can optionally be hidden
-    - This is off by default, as it can cause issues and hide some worknig devices
+    - This is off by default, as it can cause issues and hide some working devices
