@@ -334,6 +334,7 @@ var WirelessHID = GObject.registerClass({
 
         this._upowerClient = UPowerGlib.Client.new_full(null);
         this._devices = {};
+        this._updatingDevices = false;
 
         this._panelBox = new St.BoxLayout({style_class: 'panel-status-menu-box'});
         this._panelBox.horizontal = true;
@@ -398,6 +399,7 @@ var WirelessHID = GObject.registerClass({
     }
 
     discoverDevices() {
+        this._updatingDevices = true;
         let freshDevices = this._upowerClient.get_devices();
 
         // Remove disconnected devices
@@ -437,6 +439,7 @@ var WirelessHID = GObject.registerClass({
             }
         }
 
+        this._updatingDevices = false;
         this.checkVisibility();
     }
 
