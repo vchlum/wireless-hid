@@ -398,13 +398,13 @@ var WirelessHID = GObject.registerClass({
     }
 
     discoverDevices() {
-        let devices = this._upowerClient.get_devices();
+        let freshDevices = this._upowerClient.get_devices();
 
-        // Remove old devices
+        // Remove disconnected devices
         for (let j in this._devices) {
             let found = false;
-            for (let i = 0; i < devices.length; i++) {
-                if (this._devices[j].nativePath === devices[i].native_path) {
+            for (let i = 0; i < freshDevices.length; i++) {
+                if (this._devices[j].nativePath === freshDevices[i].native_path) {
                     found = true;
                     break;
                 }
@@ -416,26 +416,24 @@ var WirelessHID = GObject.registerClass({
             }
         }
 
-        // Discover new devices
-        for (let i = 0; i < devices.length; i++) {
-            if (devices[i].kind === UPowerGlib.DeviceKind.BATTERY) {
+        // Add new devices
+        for (let i = 0; i < freshDevices.length; i++) {
+            if (freshDevices[i].kind === UPowerGlib.DeviceKind.BATTERY) {
+                continue;
+            } else if (freshDevices[i].model.length === 0) {
                 continue;
             }
 
-            if (devices[i].model.length === 0) {
-                continue;
-            }
-
-            let exist = false;
+            let found = false;
             for (let j in this._devices) {
-                if (this._devices[j].nativePath === devices[i].native_path) {
-                    exist = true;
+                if (this._devices[j].nativePath === freshDevices[i].native_path) {
+                    found = true;
                     break;
                 }
             }
 
-            if (!exist) {
-                this.newDevice(devices[i]);
+            if (!found) {
+                this.newDevice(freshDevices[i]);
             }
         }
 
