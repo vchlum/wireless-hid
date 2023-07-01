@@ -45,10 +45,10 @@ const { St, GLib, GObject, UPowerGlib, Clutter } = imports.gi;
 
 var HID = GObject.registerClass({
     Signals: {
-        "update": {},
-        "show": {},
-        "hide": {},
-        "destroy": {}
+        'update': {},
+        'show': {},
+        'hide': {},
+        'destroy': {}
     }
 }, class HID extends GObject.Object {
     _init(device) {
@@ -66,7 +66,7 @@ var HID = GObject.registerClass({
         this._signals = {};
         this._timeoutUpdateTimeoutId = null;
 
-        this._settings = ExtensionUtils.getSettings("org.gnome.shell.extensions.wireless-hid");
+        this._settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.wireless-hid');
 
         this._connectSignals();
     }
@@ -133,7 +133,7 @@ var HID = GObject.registerClass({
         }
 
         if (this._settings.get_boolean('hide-elan')) {
-            if (this.device.model.startsWith("ELAN")) {
+            if (this.device.model.startsWith('ELAN')) {
                 isBatteryPresent = false;
             }
         }
@@ -246,7 +246,7 @@ var HID = GObject.registerClass({
 
     createItem() {
         this.item = new PopupMenu.PopupMenuItem(
-            _("N/A")
+            _('N/A')
         );
 
         this.item.remove_child(this.item.label);
@@ -362,7 +362,7 @@ var WirelessHID = GObject.registerClass({
         this.menu.addMenuItem(this._devices[device.native_path].createItem());
         this._devices[device.native_path].visible = true;
 
-        this._devices[device.native_path].connect("show",
+        this._devices[device.native_path].connect('show',
             () => {
                 if (!this._devices[device.native_path].visible) {
                   this._panelBox.add(this._devices[device.native_path].createIcon());
@@ -375,7 +375,7 @@ var WirelessHID = GObject.registerClass({
             }
         );
 
-        this._devices[device.native_path].connect("hide",
+        this._devices[device.native_path].connect('hide',
             () => {
                 this._panelBox.remove_child(this._devices[device.native_path].icon);
                 this._devices[device.native_path].clean();
@@ -386,7 +386,7 @@ var WirelessHID = GObject.registerClass({
         //Refresh device with signals now connected
         this._devices[device.native_path].refresh();
 
-        this._devices[device.native_path].connect("destroy",
+        this._devices[device.native_path].connect('destroy',
             () => {
                 if (this._devices[device.native_path].visible) {
                   this._panelBox.remove_child(this._devices[device.native_path].icon);
@@ -447,7 +447,7 @@ var WirelessHID = GObject.registerClass({
     }
 
     checkVisibility() {
-        if (Main.panel.statusArea["wireless-hid"] === undefined) {
+        if (Main.panel.statusArea['wireless-hid'] === undefined) {
             return;
         }
 
@@ -461,9 +461,9 @@ var WirelessHID = GObject.registerClass({
         );
 
         if (showDevices) {
-            Main.panel.statusArea["wireless-hid"].visible = true;
+            Main.panel.statusArea['wireless-hid'].visible = true;
         } else {
-            Main.panel.statusArea["wireless-hid"].visible = false;
+            Main.panel.statusArea['wireless-hid'].visible = false;
         }
     }
 
