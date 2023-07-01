@@ -56,7 +56,6 @@ var HID = GObject.registerClass({
 
         this.device = device;
         this.model = device.model;
-        this.kind = device.kind;
         this.nativePath = device.native_path;
         this.icon = null;
         this.item = null;
@@ -122,6 +121,11 @@ var HID = GObject.registerClass({
         let isBatteryPresent = true;
         if (this.device.is_present === false) {
             isBatteryPresent = false;
+        }
+
+        // Hide system batteries
+        if (this.device.kind == UPowerGlib.DeviceKind.BATTERY) {
+          isBatteryPresent = false;
         }
 
         //Some devices report 'present' as true, even if no battery is present
@@ -195,7 +199,7 @@ var HID = GObject.registerClass({
     createIcon() {
         let iconName;
 
-        switch (this.kind) {
+        switch (this.device.kind) {
             //case UPowerGlib.DeviceKind.BATTERY:
             //case UPowerGlib.DeviceKind.BLUETOOTH_GENERIC:
             case UPowerGlib.DeviceKind.CAMERA: iconName = 'camera-photo'; break;
@@ -420,9 +424,7 @@ var WirelessHID = GObject.registerClass({
 
         // Add new devices
         for (let i = 0; i < freshDevices.length; i++) {
-            if (freshDevices[i].kind === UPowerGlib.DeviceKind.BATTERY) {
-                continue;
-            } else if (freshDevices[i].model.length === 0) {
+            if (freshDevices[i].model.length === 0) {
                 continue;
             }
 
