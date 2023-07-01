@@ -123,7 +123,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">Some ELAN devices do not show a battery state. This option allows hiding such devices</property>
+                            <property name="label" translatable="yes">Some ELAN devices do not show a battery state, this setting allows hiding these devices</property>
                             <property name="halign">start</property>
                             <style>
                               <class name="dim-label"/>
@@ -245,7 +245,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">Manualy change the position in top panel (0 = default position)</property>
+                            <property name="label" translatable="yes">Manually change the position in top panel (0 = default position)</property>
                             <property name="halign">start</property>
                             <style>
                               <class name="dim-label"/>

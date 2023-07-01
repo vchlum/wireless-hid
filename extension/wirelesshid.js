@@ -35,28 +35,20 @@
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
+const ExtensionSettings = ExtensionUtils.getSettings();
+
 const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
-const St = imports.gi.St;
-const Gio = imports.gi.Gio;
-const GLib = imports.gi.GLib;
-const GObject = imports.gi.GObject;
-const UPower = imports.gi.UPowerGlib;
-const Clutter = imports.gi.Clutter;
 
-const { loadInterfaceXML } = imports.misc.fileUtils;
-const DisplayDeviceInterface = loadInterfaceXML('org.freedesktop.UPower.Device');
-const PowerManagerProxy = Gio.DBusProxy.makeProxyWrapper(DisplayDeviceInterface);
-
-const ExtensionSettings = ExtensionUtils.getSettings();
+const { St, GLib, GObject, UPowerGlib, Clutter } = imports.gi;
 
 var HID = GObject.registerClass({
     Signals: {
-        "update": {},
-        "show": {},
-        "hide": {},
-        "destroy": {}
+        'update': {},
+        'show': {},
+        'hide': {},
+        'destroy': {}
     }
 }, class HID extends GObject.Object {
     _init(device) {
@@ -64,50 +56,33 @@ var HID = GObject.registerClass({
 
         this.device = device;
         this.model = device.model;
-        this.kind = device.kind;
         this.nativePath = device.native_path;
         this.icon = null;
         this.item = null;
         this.label = null;
-        this._proxy = null;
-        this.isBatteryPresent = false;
         this.visible = false;
         this._signals = {};
         this._timeoutUpdateTimeoutId = null;
 
-        this._settings = ExtensionUtils.getSettings("org.gnome.shell.extensions.wireless-hid");
+        this._settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.wireless-hid');
 
-        this._createProxy();
+        this._connectSignals();
     }
 
-    _createProxy() {
-        this._proxy = new PowerManagerProxy(
-            Gio.DBus.system,
-            'org.freedesktop.UPower',
-            this.device.get_object_path(),
-            (p, error) => {
-                if (error) {
-                    log(`${Me.metadata.name} error: ${error.message}`);
-                    return;
-                }
+    _connectSignals() {
+        let signal;
 
-                let signal;
-
-                signal = this._proxy.connect(
-                    'g-properties-changed',
-                    this.refresh.bind(this)
-                );
-
-                this._signals[signal] = this._proxy;
-
-                signal = this._settings.connect(
-                    "changed",
-                    this.refresh.bind(this)
-                );
-
-                this._signals[signal] = this._settings;
-            }
+        signal = this.device.connect(
+            'notify::update-time',
+            this.refresh.bind(this)
         );
+        this._signals[signal] = this.device;
+
+        signal = this._settings.connect(
+            'changed',
+            this.refresh.bind(this)
+        );
+        this._signals[signal] = this._settings;
     }
 
     getBattery() {
@@ -141,27 +116,32 @@ var HID = GObject.registerClass({
         return new Clutter.ColorizeEffect({tint: color});
     }
 
-    _checkBatteryPresent() {
-        let isBatteryPresent = true;
+    _shouldBatteryVisible() {
+        let shouldBeVisible = true;
         if (this.device.is_present === false) {
-            isBatteryPresent = false;
+            shouldBeVisible = false;
+        }
+
+        // Hide system batteries
+        if (this.device.kind == UPowerGlib.DeviceKind.BATTERY) {
+          shouldBeVisible = false;
         }
 
         //Some devices report 'present' as true, even if no battery is present
         //To try work-around this, hide devices with an unknown battery state if enabled
         if (this._settings.get_boolean('hide-unknown-battery-state')) {
-            if (this.device.state === UPower.DeviceState.UNKNOWN) {
-                isBatteryPresent = false;
+            if (this.device.state === UPowerGlib.DeviceState.UNKNOWN) {
+                shouldBeVisible = false;
             }
         }
 
         if (this._settings.get_boolean('hide-elan')) {
-            if (this.device.model.startsWith("ELAN")) {
-                isBatteryPresent = false;
+            if (this.device.model.startsWith('ELAN')) {
+                shouldBeVisible = false;
             }
         }
 
-        return isBatteryPresent;
+        return shouldBeVisible;
     }
 
     _updateLabel() {
@@ -204,11 +184,11 @@ var HID = GObject.registerClass({
             }
         }
 
-        this.isBatteryPresent = this._checkBatteryPresent();
+        let shouldBeVisible = this._shouldBatteryVisible();
 
-        if (this.isBatteryPresent && !this.visible) {
+        if (shouldBeVisible && !this.visible) {
             this.emit('show');
-        } else if (!this.isBatteryPresent && this.visible){
+        } else if (!shouldBeVisible && this.visible){
             this.emit('hide');
         }
 
@@ -218,49 +198,50 @@ var HID = GObject.registerClass({
     createIcon() {
         let iconName;
 
-        switch (this.kind) {
-            //case UPower.DeviceKind.BATTERY:
-            //case UPower.DeviceKind.BLUETOOTH_GENERIC:
-            case UPower.DeviceKind.CAMERA: iconName = 'camera-photo'; break;
-            case UPower.DeviceKind.COMPUTER: iconName = 'computer'; break;
-            case UPower.DeviceKind.GAMING_INPUT: iconName = 'input-gaming'; break;
-            case UPower.DeviceKind.HEADPHONES: iconName = 'audio-headphones'; break;
-            case UPower.DeviceKind.HEADSET: iconName = 'audio-headset'; break;
-            case UPower.DeviceKind.KEYBOARD: iconName = 'input-keyboard'; break;
-            case UPower.DeviceKind.LINE_POWER: iconName = 'battery-full-charged'; break;
-            case UPower.DeviceKind.MEDIA_PLAYER: iconName = 'multimedia-player'; break;
-            case UPower.DeviceKind.MODEM: iconName = 'modem'; break;
-            case UPower.DeviceKind.MONITOR: iconName = 'video-display'; break;
-            case UPower.DeviceKind.MOUSE: iconName = 'input-mouse'; break;
-            case UPower.DeviceKind.NETWORK: iconName = 'network-workgroup'; break;
-            case UPower.DeviceKind.OTHER_AUDIO: iconName = 'audio-card'; break;
-            case UPower.DeviceKind.PDA: iconName = 'pda'; break;
-            case UPower.DeviceKind.PEN: iconName = 'document-edit'; break;
-            case UPower.DeviceKind.PHONE: iconName = 'phone'; break;
-            case UPower.DeviceKind.PRINTER: iconName = 'printer'; break;
-            case UPower.DeviceKind.REMOTE_CONTROL: iconName = 'accessories-calculator'; break;
-            case UPower.DeviceKind.SCANNER: iconName = 'scanner'; break;
-            case UPower.DeviceKind.SPEAKERS: iconName = 'audio-speakers'; break;
-            case UPower.DeviceKind.TABLET: iconName = 'input-tablet'; break;
-            case UPower.DeviceKind.TOUCHPAD: iconName = 'input-touchpad'; break;
-            case UPower.DeviceKind.TOY: iconName = 'applications-games'; break;
-            //case UPower.DeviceKind.UNKNOWN:
-            case UPower.DeviceKind.UPS: iconName = 'uninterruptible-power-supply'; break;
-            case UPower.DeviceKind.VIDEO: iconName = 'camera-video'; break;
-            //case UPower.DeviceKind.WEARABLE:
+        switch (this.device.kind) {
+            //case UPowerGlib.DeviceKind.BATTERY:
+            case UPowerGlib.DeviceKind.BLUETOOTH_GENERIC: iconName = 'bluetooth-active-symbolic'; break;
+            case UPowerGlib.DeviceKind.CAMERA: iconName = 'camera-photo'; break;
+            case UPowerGlib.DeviceKind.COMPUTER: iconName = 'computer'; break;
+            case UPowerGlib.DeviceKind.GAMING_INPUT: iconName = 'input-gaming'; break;
+            case UPowerGlib.DeviceKind.HEADPHONES: iconName = 'audio-headphones'; break;
+            case UPowerGlib.DeviceKind.HEADSET: iconName = 'audio-headset'; break;
+            case UPowerGlib.DeviceKind.KEYBOARD: iconName = 'input-keyboard'; break;
+            case UPowerGlib.DeviceKind.LINE_POWER: iconName = 'battery-full-charged'; break;
+            case UPowerGlib.DeviceKind.MEDIA_PLAYER: iconName = 'multimedia-player'; break;
+            case UPowerGlib.DeviceKind.MODEM: iconName = 'modem'; break;
+            case UPowerGlib.DeviceKind.MONITOR: iconName = 'video-display'; break;
+            case UPowerGlib.DeviceKind.MOUSE: iconName = 'input-mouse'; break;
+            case UPowerGlib.DeviceKind.NETWORK: iconName = 'network-workgroup'; break;
+            case UPowerGlib.DeviceKind.OTHER_AUDIO: iconName = 'audio-card'; break;
+            case UPowerGlib.DeviceKind.PDA: iconName = 'pda'; break;
+            case UPowerGlib.DeviceKind.PEN: iconName = 'document-edit'; break;
+            case UPowerGlib.DeviceKind.PHONE: iconName = 'phone'; break;
+            case UPowerGlib.DeviceKind.PRINTER: iconName = 'printer'; break;
+            case UPowerGlib.DeviceKind.REMOTE_CONTROL: iconName = 'accessories-calculator'; break;
+            case UPowerGlib.DeviceKind.SCANNER: iconName = 'scanner'; break;
+            case UPowerGlib.DeviceKind.SPEAKERS: iconName = 'audio-speakers'; break;
+            case UPowerGlib.DeviceKind.TABLET: iconName = 'input-tablet'; break;
+            case UPowerGlib.DeviceKind.TOUCHPAD: iconName = 'input-touchpad'; break;
+            case UPowerGlib.DeviceKind.TOY: iconName = 'applications-games'; break;
+            //case UPowerGlib.DeviceKind.UNKNOWN:
+            case UPowerGlib.DeviceKind.UPS: iconName = 'uninterruptible-power-supply'; break;
+            case UPowerGlib.DeviceKind.VIDEO: iconName = 'camera-video'; break;
+            //case UPowerGlib.DeviceKind.WEARABLE:
             default: iconName = 'battery';
         }
 
-        // Workaround for mouse recognized as keyboard
-        if (this.model.includes('Mouse'))
+        // Workarounds for incorrectly identified devices
+        if (this.model.includes('Mouse')) {
             iconName = 'input-mouse';
-
-        // Workaround for controller recognized as keyboard
-        if (this.model.includes('Controller'))
+        } else if (this.model.includes('Controller')) {
             iconName = 'input-gaming';
+        } else if (this.model.includes('Headset')) {
+            iconName = 'audio-headset';
+        }
 
         this.icon = new St.Icon({
-            icon_name: iconName+'-symbolic',
+            icon_name: iconName + '-symbolic',
             style_class: 'system-status-icon'
         });
 
@@ -269,7 +250,7 @@ var HID = GObject.registerClass({
 
     createItem() {
         this.item = new PopupMenu.PopupMenuItem(
-            _("N/A")
+            _('N/A')
         );
 
         this.item.remove_child(this.item.label);
@@ -323,7 +304,7 @@ var HID = GObject.registerClass({
     }
 });
 
-/**
+/*
  * WirelessHID class. Provides widget.
  * 
  * @class PhueMenu
@@ -334,7 +315,7 @@ var WirelessHID = GObject.registerClass({
     GTypeName: 'WirelessHID'
 }, class WirelessHID extends PanelMenu.Button {
 
-    /**
+    /*
      * WirelessHID class initialization
      *  
      * @method _init
@@ -344,18 +325,20 @@ var WirelessHID = GObject.registerClass({
 
         super._init(0.0, Me.metadata.name, false);
 
-        /* Get saved settings */
+        // Get saved settings
         this._settings = ExtensionUtils.getSettings();
         this._getPrefs();
 
-        /* Connect to the changed signal */
+        // Connect to the changed signal
         this._settingsChangedId = this._settings.connect(
             'changed', () => {
             this._getPrefs();
             this._resetPanelPos();
         });
 
+        this._upowerClient = UPowerGlib.Client.new_full(null);
         this._devices = {};
+        this._updatingDevices = false;
 
         this._panelBox = new St.BoxLayout({style_class: 'panel-status-menu-box'});
         this._panelBox.horizontal = true;
@@ -364,36 +347,13 @@ var WirelessHID = GObject.registerClass({
 
         this.add_child(this._panelBox);
 
-        let uPowerProxy = new PowerManagerProxy(
-            Gio.DBus.system,
-            'org.freedesktop.UPower',
-            '/org/freedesktop/UPower',
-            (proxy,error)=>{
-                    if (error) {
-                        log(`${Me.metadata.name} error: ${error.message}`);
-                    }
-            }
-        );
-
-        let dbusCon = uPowerProxy.get_connection();
-
-        this._subscribeAdd = dbusCon.signal_subscribe(
-            'org.freedesktop.UPower',
-            'org.freedesktop.UPower',
-            'DeviceAdded',
-            null,
-            null,
-            0,
+        this._deviceAddedSignal = this._upowerClient.connect(
+            'device-added',
             this.discoverDevices.bind(this)
         );
 
-        this._subscribeRemove = dbusCon.signal_subscribe(
-            'org.freedesktop.UPower',
-            'org.freedesktop.UPower',
-            'DeviceRemoved',
-            null,
-            null,
-            0,
+        this._deviceRemovedSignal = this._upowerClient.connect(
+            'device-removed',
             this.discoverDevices.bind(this)
         );
 
@@ -407,7 +367,7 @@ var WirelessHID = GObject.registerClass({
         this.menu.addMenuItem(this._devices[device.native_path].createItem());
         this._devices[device.native_path].visible = true;
 
-        this._devices[device.native_path].connect("show",
+        this._devices[device.native_path].connect('show',
             () => {
                 if (!this._devices[device.native_path].visible) {
                   this._panelBox.add(this._devices[device.native_path].createIcon());
@@ -420,7 +380,7 @@ var WirelessHID = GObject.registerClass({
             }
         );
 
-        this._devices[device.native_path].connect("hide",
+        this._devices[device.native_path].connect('hide',
             () => {
                 this._panelBox.remove_child(this._devices[device.native_path].icon);
                 this._devices[device.native_path].clean();
@@ -431,7 +391,7 @@ var WirelessHID = GObject.registerClass({
         //Refresh device with signals now connected
         this._devices[device.native_path].refresh();
 
-        this._devices[device.native_path].connect("destroy",
+        this._devices[device.native_path].connect('destroy',
             () => {
                 if (this._devices[device.native_path].visible) {
                   this._panelBox.remove_child(this._devices[device.native_path].icon);
@@ -443,16 +403,14 @@ var WirelessHID = GObject.registerClass({
     }
 
     discoverDevices() {
-        let upowerClient = UPower.Client.new_full(null);
-        let devices = upowerClient.get_devices();
+        this._updatingDevices = true;
+        let freshDevices = this._upowerClient.get_devices();
 
-        /**
-         * remove old devices
-         */
+        // Remove disconnected devices
         for (let j in this._devices) {
             let found = false;
-            for (let i = 0; i < devices.length; i++) {
-                if (this._devices[j].nativePath === devices[i].native_path) {
+            for (let i = 0; i < freshDevices.length; i++) {
+                if (this._devices[j].nativePath === freshDevices[i].native_path) {
                     found = true;
                     break;
                 }
@@ -464,56 +422,49 @@ var WirelessHID = GObject.registerClass({
             }
         }
 
-        /**
-         * discover new devices
-         */
-        for (let i = 0; i < devices.length; i++) {
-            if (devices[i].kind === UPower.DeviceKind.BATTERY) {
+        // Add new devices
+        for (let i = 0; i < freshDevices.length; i++) {
+            if (freshDevices[i].model.length === 0) {
                 continue;
             }
 
-            if (devices[i].model.length === 0) {
-                continue;
-            }
-
-            let exist = false;
+            let found = false;
             for (let j in this._devices) {
-                if (this._devices[j].nativePath === devices[i].native_path) {
-                    exist = true;
+                if (this._devices[j].nativePath === freshDevices[i].native_path) {
+                    found = true;
                     break;
                 }
             }
 
-            if (!exist) {
-                this.newDevice(devices[i]);
+            if (!found) {
+                this.newDevice(freshDevices[i]);
             }
         }
 
+        this._updatingDevices = false;
         this.checkVisibility();
     }
 
     checkVisibility() {
-        if (Main.panel.statusArea["wireless-hid"] === undefined) {
+        if (Main.panel.statusArea['wireless-hid'] === undefined) {
             return;
         }
 
         let showDevices = false;
-        Object.keys(this._devices).forEach(
-            (key) => {
-                if (this._devices[key].visible) {
-                  showDevices = true;
-                }
+        for (let id in this._devices) {
+            if (this._devices[id].visible) {
+              showDevices = true;
+              break;
             }
-        );
-
-        if (showDevices) {
-            Main.panel.statusArea["wireless-hid"].visible = true;
-        } else {
-            Main.panel.statusArea["wireless-hid"].visible = false;
         }
+
+        Main.panel.statusArea['wireless-hid'].visible = showDevices;
     }
 
     _onDestroy() {
+        this._upowerClient.disconnect(this._deviceAddedSignal);
+        this._upowerClient.disconnect(this._deviceRemovedSignal);
+
         if (this._settingsChangedId) {
             this._settings.disconnect(this._settingsChangedId);
             this._settingsChangedId = 0;
@@ -534,7 +485,7 @@ var WirelessHID = GObject.registerClass({
     _resetPanelPos() {
         this.container.get_parent().remove_actor(this.container);
 
-        // small HACK with private boxes :)
+        // Small HACK with private boxes :)
         let boxes = {
             left: Main.panel._leftBox,
             center: Main.panel._centerBox,
@@ -547,7 +498,7 @@ var WirelessHID = GObject.registerClass({
     }
 
     _getPrefs() {
-        /* Get stored settings */
+        // Get stored settings
         this._menuPosition = this._settings.get_string('position-in-panel').toLowerCase();
         this._menuBoxIndex = this._settings.get_int('panel-box-index');
     }

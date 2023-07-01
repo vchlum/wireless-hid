@@ -47,7 +47,6 @@ var hid; /* main widget */
  * @method init
  */
 function init() {
-
     ExtensionUtils.initTranslations();
 }
 
@@ -57,7 +56,6 @@ function init() {
  * @method enable
  */
 function enable() {
-
     hid = new WirelessHID.WirelessHID();
 
     Main.panel.addToStatusArea('wireless-hid', hid);
@@ -75,6 +73,5 @@ function enable() {
  * @method disable
  */
 function disable() {
-
     hid.destroy();
 }
