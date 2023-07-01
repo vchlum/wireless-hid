@@ -446,19 +446,14 @@ var WirelessHID = GObject.registerClass({
         }
 
         let showDevices = false;
-        Object.keys(this._devices).forEach(
-            (key) => {
-                if (this._devices[key].visible) {
-                  showDevices = true;
-                }
+        for (let id in this._devices) {
+            if (this._devices[id].visible) {
+              showDevices = true;
+              break;
             }
-        );
-
-        if (showDevices) {
-            Main.panel.statusArea['wireless-hid'].visible = true;
-        } else {
-            Main.panel.statusArea['wireless-hid'].visible = false;
         }
+
+        Main.panel.statusArea['wireless-hid'].visible = showDevices;
     }
 
     _onDestroy() {
