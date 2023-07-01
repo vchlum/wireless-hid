@@ -200,7 +200,7 @@ var HID = GObject.registerClass({
 
         switch (this.device.kind) {
             //case UPowerGlib.DeviceKind.BATTERY:
-            //case UPowerGlib.DeviceKind.BLUETOOTH_GENERIC:
+            case UPowerGlib.DeviceKind.BLUETOOTH_GENERIC: iconName = 'bluetooth-active-symbolic'; break;
             case UPowerGlib.DeviceKind.CAMERA: iconName = 'camera-photo'; break;
             case UPowerGlib.DeviceKind.COMPUTER: iconName = 'computer'; break;
             case UPowerGlib.DeviceKind.GAMING_INPUT: iconName = 'input-gaming'; break;
