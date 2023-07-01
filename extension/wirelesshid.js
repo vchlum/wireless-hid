@@ -231,14 +231,13 @@ var HID = GObject.registerClass({
             default: iconName = 'battery';
         }
 
-        // Workaround for mouse recognized as keyboard
+        // Workarounds for incorrectly identified devices
         if (this.model.includes('Mouse')) {
             iconName = 'input-mouse';
-        }
-
-        // Workaround for controller recognized as keyboard
-        if (this.model.includes('Controller')) {
+        } else if (this.model.includes('Controller')) {
             iconName = 'input-gaming';
+        } else if (this.model.includes('Headset')) {
+            iconName = 'audio-headset';
         }
 
         this.icon = new St.Icon({
