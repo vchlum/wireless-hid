@@ -69,7 +69,6 @@ var HID = GObject.registerClass({
         this.icon = null;
         this.item = null;
         this.label = null;
-        this._proxy = null;
         this.isBatteryPresent = false;
         this.visible = false;
         this._signals = {};
@@ -77,37 +76,23 @@ var HID = GObject.registerClass({
 
         this._settings = ExtensionUtils.getSettings("org.gnome.shell.extensions.wireless-hid");
 
-        this._createProxy();
+        this._connectSignals();
     }
 
-    _createProxy() {
-        this._proxy = new PowerManagerProxy(
-            Gio.DBus.system,
-            'org.freedesktop.UPower',
-            this.device.get_object_path(),
-            (p, error) => {
-                if (error) {
-                    log(`${Me.metadata.name} error: ${error.message}`);
-                    return;
-                }
+    _connectSignals() {
+        let signal;
 
-                let signal;
-
-                signal = this._proxy.connect(
-                    'g-properties-changed',
-                    this.refresh.bind(this)
-                );
-
-                this._signals[signal] = this._proxy;
-
-                signal = this._settings.connect(
-                    "changed",
-                    this.refresh.bind(this)
-                );
-
-                this._signals[signal] = this._settings;
-            }
+        signal = this.device.connect(
+            'notify::update-time',
+            this.refresh.bind(this)
         );
+        this._signals[signal] = this.device;
+
+        signal = this._settings.connect(
+            'changed',
+            this.refresh.bind(this)
+        );
+        this._signals[signal] = this._settings;
     }
 
     getBattery() {
