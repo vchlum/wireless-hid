@@ -300,7 +300,7 @@ var HID = GObject.registerClass({
     }
 });
 
-/**
+/*
  * WirelessHID class. Provides widget.
  * 
  * @class PhueMenu
@@ -311,7 +311,7 @@ var WirelessHID = GObject.registerClass({
     GTypeName: 'WirelessHID'
 }, class WirelessHID extends PanelMenu.Button {
 
-    /**
+    /*
      * WirelessHID class initialization
      *  
      * @method _init
@@ -321,11 +321,11 @@ var WirelessHID = GObject.registerClass({
 
         super._init(0.0, Me.metadata.name, false);
 
-        /* Get saved settings */
+        // Get saved settings
         this._settings = ExtensionUtils.getSettings();
         this._getPrefs();
 
-        /* Connect to the changed signal */
+        // Connect to the changed signal
         this._settingsChangedId = this._settings.connect(
             'changed', () => {
             this._getPrefs();
@@ -400,9 +400,7 @@ var WirelessHID = GObject.registerClass({
     discoverDevices() {
         let devices = this._upowerClient.get_devices();
 
-        /**
-         * remove old devices
-         */
+        // Remove old devices
         for (let j in this._devices) {
             let found = false;
             for (let i = 0; i < devices.length; i++) {
@@ -418,9 +416,7 @@ var WirelessHID = GObject.registerClass({
             }
         }
 
-        /**
-         * discover new devices
-         */
+        // Discover new devices
         for (let i = 0; i < devices.length; i++) {
             if (devices[i].kind === UPowerGlib.DeviceKind.BATTERY) {
                 continue;
@@ -491,7 +487,7 @@ var WirelessHID = GObject.registerClass({
     _resetPanelPos() {
         this.container.get_parent().remove_actor(this.container);
 
-        // small HACK with private boxes :)
+        // Small HACK with private boxes :)
         let boxes = {
             left: Main.panel._leftBox,
             center: Main.panel._centerBox,
@@ -504,7 +500,7 @@ var WirelessHID = GObject.registerClass({
     }
 
     _getPrefs() {
-        /* Get stored settings */
+        // Get stored settings
         this._menuPosition = this._settings.get_string('position-in-panel').toLowerCase();
         this._menuBoxIndex = this._settings.get_int('panel-box-index');
     }
