@@ -35,16 +35,13 @@
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
+const ExtensionSettings = ExtensionUtils.getSettings();
+
 const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
-const St = imports.gi.St;
-const GLib = imports.gi.GLib;
-const GObject = imports.gi.GObject;
-const UPower = imports.gi.UPowerGlib;
-const Clutter = imports.gi.Clutter;
 
-const ExtensionSettings = ExtensionUtils.getSettings();
+const { St, GLib, GObject, UPowerGlib, Clutter } = imports.gi;
 
 var HID = GObject.registerClass({
     Signals: {
@@ -130,7 +127,7 @@ var HID = GObject.registerClass({
         //Some devices report 'present' as true, even if no battery is present
         //To try work-around this, hide devices with an unknown battery state if enabled
         if (this._settings.get_boolean('hide-unknown-battery-state')) {
-            if (this.device.state === UPower.DeviceState.UNKNOWN) {
+            if (this.device.state === UPowerGlib.DeviceState.UNKNOWN) {
                 isBatteryPresent = false;
             }
         }
@@ -199,35 +196,35 @@ var HID = GObject.registerClass({
         let iconName;
 
         switch (this.kind) {
-            //case UPower.DeviceKind.BATTERY:
-            //case UPower.DeviceKind.BLUETOOTH_GENERIC:
-            case UPower.DeviceKind.CAMERA: iconName = 'camera-photo'; break;
-            case UPower.DeviceKind.COMPUTER: iconName = 'computer'; break;
-            case UPower.DeviceKind.GAMING_INPUT: iconName = 'input-gaming'; break;
-            case UPower.DeviceKind.HEADPHONES: iconName = 'audio-headphones'; break;
-            case UPower.DeviceKind.HEADSET: iconName = 'audio-headset'; break;
-            case UPower.DeviceKind.KEYBOARD: iconName = 'input-keyboard'; break;
-            case UPower.DeviceKind.LINE_POWER: iconName = 'battery-full-charged'; break;
-            case UPower.DeviceKind.MEDIA_PLAYER: iconName = 'multimedia-player'; break;
-            case UPower.DeviceKind.MODEM: iconName = 'modem'; break;
-            case UPower.DeviceKind.MONITOR: iconName = 'video-display'; break;
-            case UPower.DeviceKind.MOUSE: iconName = 'input-mouse'; break;
-            case UPower.DeviceKind.NETWORK: iconName = 'network-workgroup'; break;
-            case UPower.DeviceKind.OTHER_AUDIO: iconName = 'audio-card'; break;
-            case UPower.DeviceKind.PDA: iconName = 'pda'; break;
-            case UPower.DeviceKind.PEN: iconName = 'document-edit'; break;
-            case UPower.DeviceKind.PHONE: iconName = 'phone'; break;
-            case UPower.DeviceKind.PRINTER: iconName = 'printer'; break;
-            case UPower.DeviceKind.REMOTE_CONTROL: iconName = 'accessories-calculator'; break;
-            case UPower.DeviceKind.SCANNER: iconName = 'scanner'; break;
-            case UPower.DeviceKind.SPEAKERS: iconName = 'audio-speakers'; break;
-            case UPower.DeviceKind.TABLET: iconName = 'input-tablet'; break;
-            case UPower.DeviceKind.TOUCHPAD: iconName = 'input-touchpad'; break;
-            case UPower.DeviceKind.TOY: iconName = 'applications-games'; break;
-            //case UPower.DeviceKind.UNKNOWN:
-            case UPower.DeviceKind.UPS: iconName = 'uninterruptible-power-supply'; break;
-            case UPower.DeviceKind.VIDEO: iconName = 'camera-video'; break;
-            //case UPower.DeviceKind.WEARABLE:
+            //case UPowerGlib.DeviceKind.BATTERY:
+            //case UPowerGlib.DeviceKind.BLUETOOTH_GENERIC:
+            case UPowerGlib.DeviceKind.CAMERA: iconName = 'camera-photo'; break;
+            case UPowerGlib.DeviceKind.COMPUTER: iconName = 'computer'; break;
+            case UPowerGlib.DeviceKind.GAMING_INPUT: iconName = 'input-gaming'; break;
+            case UPowerGlib.DeviceKind.HEADPHONES: iconName = 'audio-headphones'; break;
+            case UPowerGlib.DeviceKind.HEADSET: iconName = 'audio-headset'; break;
+            case UPowerGlib.DeviceKind.KEYBOARD: iconName = 'input-keyboard'; break;
+            case UPowerGlib.DeviceKind.LINE_POWER: iconName = 'battery-full-charged'; break;
+            case UPowerGlib.DeviceKind.MEDIA_PLAYER: iconName = 'multimedia-player'; break;
+            case UPowerGlib.DeviceKind.MODEM: iconName = 'modem'; break;
+            case UPowerGlib.DeviceKind.MONITOR: iconName = 'video-display'; break;
+            case UPowerGlib.DeviceKind.MOUSE: iconName = 'input-mouse'; break;
+            case UPowerGlib.DeviceKind.NETWORK: iconName = 'network-workgroup'; break;
+            case UPowerGlib.DeviceKind.OTHER_AUDIO: iconName = 'audio-card'; break;
+            case UPowerGlib.DeviceKind.PDA: iconName = 'pda'; break;
+            case UPowerGlib.DeviceKind.PEN: iconName = 'document-edit'; break;
+            case UPowerGlib.DeviceKind.PHONE: iconName = 'phone'; break;
+            case UPowerGlib.DeviceKind.PRINTER: iconName = 'printer'; break;
+            case UPowerGlib.DeviceKind.REMOTE_CONTROL: iconName = 'accessories-calculator'; break;
+            case UPowerGlib.DeviceKind.SCANNER: iconName = 'scanner'; break;
+            case UPowerGlib.DeviceKind.SPEAKERS: iconName = 'audio-speakers'; break;
+            case UPowerGlib.DeviceKind.TABLET: iconName = 'input-tablet'; break;
+            case UPowerGlib.DeviceKind.TOUCHPAD: iconName = 'input-touchpad'; break;
+            case UPowerGlib.DeviceKind.TOY: iconName = 'applications-games'; break;
+            //case UPowerGlib.DeviceKind.UNKNOWN:
+            case UPowerGlib.DeviceKind.UPS: iconName = 'uninterruptible-power-supply'; break;
+            case UPowerGlib.DeviceKind.VIDEO: iconName = 'camera-video'; break;
+            //case UPowerGlib.DeviceKind.WEARABLE:
             default: iconName = 'battery';
         }
 
@@ -335,7 +332,7 @@ var WirelessHID = GObject.registerClass({
             this._resetPanelPos();
         });
 
-        this._upowerClient = UPower.Client.new_full(null);
+        this._upowerClient = UPowerGlib.Client.new_full(null);
         this._devices = {};
 
         this._panelBox = new St.BoxLayout({style_class: 'panel-status-menu-box'});
@@ -425,7 +422,7 @@ var WirelessHID = GObject.registerClass({
          * discover new devices
          */
         for (let i = 0; i < devices.length; i++) {
-            if (devices[i].kind === UPower.DeviceKind.BATTERY) {
+            if (devices[i].kind === UPowerGlib.DeviceKind.BATTERY) {
                 continue;
             }
 
