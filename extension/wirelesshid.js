@@ -39,15 +39,10 @@ const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 const St = imports.gi.St;
-const Gio = imports.gi.Gio;
 const GLib = imports.gi.GLib;
 const GObject = imports.gi.GObject;
 const UPower = imports.gi.UPowerGlib;
 const Clutter = imports.gi.Clutter;
-
-const { loadInterfaceXML } = imports.misc.fileUtils;
-const DisplayDeviceInterface = loadInterfaceXML('org.freedesktop.UPower.Device');
-const PowerManagerProxy = Gio.DBusProxy.makeProxyWrapper(DisplayDeviceInterface);
 
 const ExtensionSettings = ExtensionUtils.getSettings();
 
@@ -340,6 +335,7 @@ var WirelessHID = GObject.registerClass({
             this._resetPanelPos();
         });
 
+        this._upowerClient = UPower.Client.new_full(null);
         this._devices = {};
 
         this._panelBox = new St.BoxLayout({style_class: 'panel-status-menu-box'});
@@ -349,36 +345,13 @@ var WirelessHID = GObject.registerClass({
 
         this.add_child(this._panelBox);
 
-        let uPowerProxy = new PowerManagerProxy(
-            Gio.DBus.system,
-            'org.freedesktop.UPower',
-            '/org/freedesktop/UPower',
-            (proxy,error)=>{
-                    if (error) {
-                        log(`${Me.metadata.name} error: ${error.message}`);
-                    }
-            }
-        );
-
-        let dbusCon = uPowerProxy.get_connection();
-
-        this._subscribeAdd = dbusCon.signal_subscribe(
-            'org.freedesktop.UPower',
-            'org.freedesktop.UPower',
-            'DeviceAdded',
-            null,
-            null,
-            0,
+        this._deviceAddedSignal = this._upowerClient.connect(
+            'device-added',
             this.discoverDevices.bind(this)
         );
 
-        this._subscribeRemove = dbusCon.signal_subscribe(
-            'org.freedesktop.UPower',
-            'org.freedesktop.UPower',
-            'DeviceRemoved',
-            null,
-            null,
-            0,
+        this._deviceRemovedSignal = this._upowerClient.connect(
+            'device-removed',
             this.discoverDevices.bind(this)
         );
 
@@ -428,8 +401,7 @@ var WirelessHID = GObject.registerClass({
     }
 
     discoverDevices() {
-        let upowerClient = UPower.Client.new_full(null);
-        let devices = upowerClient.get_devices();
+        let devices = this._upowerClient.get_devices();
 
         /**
          * remove old devices
@@ -499,6 +471,9 @@ var WirelessHID = GObject.registerClass({
     }
 
     _onDestroy() {
+        this._upowerClient.disconnect(this._deviceAddedSignal);
+        this._upowerClient.disconnect(this._deviceRemovedSignal);
+
         if (this._settingsChangedId) {
             this._settings.disconnect(this._settingsChangedId);
             this._settingsChangedId = 0;
