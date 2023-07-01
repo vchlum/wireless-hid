@@ -60,7 +60,6 @@ var HID = GObject.registerClass({
         this.icon = null;
         this.item = null;
         this.label = null;
-        this.isBatteryPresent = false;
         this.visible = false;
         this._signals = {};
         this._timeoutUpdateTimeoutId = null;
@@ -117,32 +116,32 @@ var HID = GObject.registerClass({
         return new Clutter.ColorizeEffect({tint: color});
     }
 
-    _checkBatteryPresent() {
-        let isBatteryPresent = true;
+    _shouldBatteryVisible() {
+        let shouldBeVisible = true;
         if (this.device.is_present === false) {
-            isBatteryPresent = false;
+            shouldBeVisible = false;
         }
 
         // Hide system batteries
         if (this.device.kind == UPowerGlib.DeviceKind.BATTERY) {
-          isBatteryPresent = false;
+          shouldBeVisible = false;
         }
 
         //Some devices report 'present' as true, even if no battery is present
         //To try work-around this, hide devices with an unknown battery state if enabled
         if (this._settings.get_boolean('hide-unknown-battery-state')) {
             if (this.device.state === UPowerGlib.DeviceState.UNKNOWN) {
-                isBatteryPresent = false;
+                shouldBeVisible = false;
             }
         }
 
         if (this._settings.get_boolean('hide-elan')) {
             if (this.device.model.startsWith('ELAN')) {
-                isBatteryPresent = false;
+                shouldBeVisible = false;
             }
         }
 
-        return isBatteryPresent;
+        return shouldBeVisible;
     }
 
     _updateLabel() {
@@ -185,11 +184,11 @@ var HID = GObject.registerClass({
             }
         }
 
-        this.isBatteryPresent = this._checkBatteryPresent();
+        let shouldBeVisible = this._shouldBatteryVisible();
 
-        if (this.isBatteryPresent && !this.visible) {
+        if (shouldBeVisible && !this.visible) {
             this.emit('show');
-        } else if (!this.isBatteryPresent && this.visible){
+        } else if (!shouldBeVisible && this.visible){
             this.emit('hide');
         }
 
