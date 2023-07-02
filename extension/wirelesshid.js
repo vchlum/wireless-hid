@@ -403,46 +403,48 @@ var WirelessHID = GObject.registerClass({
     }
 
     discoverDevices() {
-        this._updatingDevices = true;
-        let freshDevices = this._upowerClient.get_devices();
+        if (!this._updatingDevices) {
+            this._updatingDevices = true;
+            let freshDevices = this._upowerClient.get_devices();
 
-        // Remove disconnected devices
-        for (let j in this._devices) {
-            let found = false;
-            for (let i = 0; i < freshDevices.length; i++) {
-                if (this._devices[j].nativePath === freshDevices[i].native_path) {
-                    found = true;
-                    break;
-                }
-            }
-
-            if (!found) {
-                this._devices[j].destroy();
-                delete(this._devices[j]);
-            }
-        }
-
-        // Add new devices
-        for (let i = 0; i < freshDevices.length; i++) {
-            if (freshDevices[i].model.length === 0) {
-                continue;
-            }
-
-            let found = false;
+            // Remove disconnected devices
             for (let j in this._devices) {
-                if (this._devices[j].nativePath === freshDevices[i].native_path) {
-                    found = true;
-                    break;
+                let found = false;
+                for (let i = 0; i < freshDevices.length; i++) {
+                    if (this._devices[j].nativePath === freshDevices[i].native_path) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    this._devices[j].destroy();
+                    delete(this._devices[j]);
                 }
             }
 
-            if (!found) {
-                this.newDevice(freshDevices[i]);
-            }
-        }
+            // Add new devices
+            for (let i = 0; i < freshDevices.length; i++) {
+                if (freshDevices[i].model.length === 0) {
+                    continue;
+                }
 
-        this._updatingDevices = false;
-        this.checkVisibility();
+                let found = false;
+                for (let j in this._devices) {
+                    if (this._devices[j].nativePath === freshDevices[i].native_path) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    this.newDevice(freshDevices[i]);
+                }
+            }
+
+            this._updatingDevices = false;
+            this.checkVisibility();
+        }
     }
 
     checkVisibility() {
