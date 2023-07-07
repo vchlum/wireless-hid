@@ -1,3 +1,10 @@
+## Version 13
+ * change to Makefile build system
+ * replace DBus with UPower clients
+ * fixed a race condition that lead to duplicate devices
+ * fixed devices that initially appear as a generic battery then get a device type
+ * added a workaround for headsets appearing as keyboards or other devices
+ * added an icon name for generic Bluetooth devices
 ## Version 12
  * fix destroying of devices on disabling (thx to @stuarthayhurst)
 ## Version 11

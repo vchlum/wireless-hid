@@ -3,7 +3,7 @@
     "settings-schema": "org.gnome.shell.extensions.wireless-hid",
     "name": "Wireless HID",
     "description": "This extension shows the battery of the wireless keyboards, mice, and game controllers in percentages and colors. Multiple devices are supported.",
-    "version": 12,
+    "version": 13,
     "original-author": "chlumskyvaclav@gmail.com",
     "shell-version": [
       "3.36",
