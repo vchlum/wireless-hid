@@ -1,3 +1,5 @@
+## Version 14
+ * remove instances in global scope
 ## Version 13
  * change to Makefile build system
  * replace DBus with UPower clients
