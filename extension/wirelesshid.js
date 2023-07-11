@@ -53,7 +53,6 @@ var HID = GObject.registerClass({
         super._init();
 
         this.device = device;
-        this.model = device.model;
         this.nativePath = device.native_path;
         this.icon = null;
         this.item = null;
@@ -237,11 +236,11 @@ var HID = GObject.registerClass({
         }
 
         // Workarounds for incorrectly identified devices
-        if (this.model.includes('Mouse')) {
+        if (this.device.model.includes('Mouse')) {
             iconName = 'input-mouse';
-        } else if (this.model.includes('Controller')) {
+        } else if (this.device.model.includes('Controller')) {
             iconName = 'input-gaming';
-        } else if (this.model.includes('Headset')) {
+        } else if (this.device.model.includes('Headset')) {
             iconName = 'audio-headset';
         }
 
@@ -261,7 +260,7 @@ var HID = GObject.registerClass({
         this.item.remove_child(this.item.label);
 
         let name = new St.Label({
-            text: `${this.model}:`,
+            text: `${this.device.model}:`,
             y_align: Clutter.ActorAlign.CENTER,
             x_align: Clutter.ActorAlign.START
         });
