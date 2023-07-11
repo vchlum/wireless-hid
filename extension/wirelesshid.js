@@ -120,6 +120,13 @@ var HID = GObject.registerClass({
             shouldBeVisible = false;
         }
 
+        // Hide devices without model names
+        if (this.device.model === null) {
+            shouldBeVisible = false;
+        } else if (this.device.model.length === 0) {
+            shouldBeVisible = false;
+        }
+
         // Hide system batteries
         if (this.device.kind == UPowerGlib.DeviceKind.BATTERY) {
           shouldBeVisible = false;
@@ -423,12 +430,6 @@ var WirelessHID = GObject.registerClass({
 
             // Add new devices
             for (let i = 0; i < freshDevices.length; i++) {
-                if (freshDevices.model === null) {
-                    continue;
-                } else if (freshDevices[i].model.length === 0) {
-                    continue;
-                }
-
                 let found = false;
                 for (let j in this._devices) {
                     if (this._devices[j].nativePath === freshDevices[i].native_path) {
