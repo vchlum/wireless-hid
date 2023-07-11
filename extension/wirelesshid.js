@@ -117,36 +117,36 @@ var HID = GObject.registerClass({
     _shouldBatteryVisible() {
         let shouldBeVisible = true;
         if (this.device.is_present === false) {
-            shouldBeVisible = false;
+            return false;
         }
 
         // Hide devices without model names
         if (this.device.model === null) {
-            shouldBeVisible = false;
+            return false;
         } else if (this.device.model.length === 0) {
-            shouldBeVisible = false;
+            return false;
         }
 
         // Hide system batteries
         if (this.device.kind == UPowerGlib.DeviceKind.BATTERY) {
-          shouldBeVisible = false;
+          return false;
         }
 
         //Some devices report 'present' as true, even if no battery is present
         //To try work-around this, hide devices with an unknown battery state if enabled
         if (this._settings.get_boolean('hide-unknown-battery-state')) {
             if (this.device.state === UPowerGlib.DeviceState.UNKNOWN) {
-                shouldBeVisible = false;
+                return false;
             }
         }
 
         if (this._settings.get_boolean('hide-elan')) {
             if (this.device.model.startsWith('ELAN')) {
-                shouldBeVisible = false;
+                return false;
             }
         }
 
-        return shouldBeVisible;
+        return true;
     }
 
     _updateLabel() {
