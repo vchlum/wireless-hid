@@ -53,7 +53,6 @@ var HID = GObject.registerClass({
         super._init();
 
         this.device = device;
-        this.model = device.model;
         this.nativePath = device.native_path;
         this.icon = null;
         this.item = null;
@@ -117,29 +116,36 @@ var HID = GObject.registerClass({
     _shouldBatteryVisible() {
         let shouldBeVisible = true;
         if (this.device.is_present === false) {
-            shouldBeVisible = false;
+            return false;
+        }
+
+        // Hide devices without model names
+        if (this.device.model === null) {
+            return false;
+        } else if (this.device.model.length === 0) {
+            return false;
         }
 
         // Hide system batteries
         if (this.device.kind == UPowerGlib.DeviceKind.BATTERY) {
-          shouldBeVisible = false;
+          return false;
         }
 
-        //Some devices report 'present' as true, even if no battery is present
-        //To try work-around this, hide devices with an unknown battery state if enabled
+        // Some devices report 'present' as true, even if no battery is present
+        // To try work-around this, hide devices with an unknown battery state if enabled
         if (this._settings.get_boolean('hide-unknown-battery-state')) {
             if (this.device.state === UPowerGlib.DeviceState.UNKNOWN) {
-                shouldBeVisible = false;
+                return false;
             }
         }
 
         if (this._settings.get_boolean('hide-elan')) {
             if (this.device.model.startsWith('ELAN')) {
-                shouldBeVisible = false;
+                return false;
             }
         }
 
-        return shouldBeVisible;
+        return true;
     }
 
     _updateLabel() {
@@ -151,13 +157,13 @@ var HID = GObject.registerClass({
     }
 
     refresh() {
-        //If a timeout is already set, remove it
+        // If a timeout is already set, remove it
         if (this._timeoutUpdateTimeoutId != null) {
             GLib.Source.remove(this._timeoutUpdateTimeoutId);
             this._timeoutUpdateTimeoutId = null;
         }
 
-        //If enabled, create a timer to hide the device if it's not cancelled by an update
+        // If enabled, create a timer to hide the device if it's not cancelled by an update
         let deviceTimeoutLength = this._settings.get_int('device-update-timeout') * 1000;
         if (deviceTimeoutLength != 0) {
             this._timeoutUpdateTimeoutId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, deviceTimeoutLength, () => {
@@ -230,12 +236,14 @@ var HID = GObject.registerClass({
         }
 
         // Workarounds for incorrectly identified devices
-        if (this.model.includes('Mouse')) {
-            iconName = 'input-mouse';
-        } else if (this.model.includes('Controller')) {
-            iconName = 'input-gaming';
-        } else if (this.model.includes('Headset')) {
-            iconName = 'audio-headset';
+        if (this.device.model !== null) {
+            if (this.device.model.includes('Mouse')) {
+                iconName = 'input-mouse';
+            } else if (this.device.model.includes('Controller')) {
+                iconName = 'input-gaming';
+            } else if (this.device.model.includes('Headset')) {
+                iconName = 'audio-headset';
+            }
         }
 
         this.icon = new St.Icon({
@@ -253,8 +261,9 @@ var HID = GObject.registerClass({
 
         this.item.remove_child(this.item.label);
 
+        let model = this.device.model;
         let name = new St.Label({
-            text: `${this.model}:`,
+            text: model !== null ? `${model}:` : 'Unknown:',
             y_align: Clutter.ActorAlign.CENTER,
             x_align: Clutter.ActorAlign.START
         });
@@ -372,7 +381,7 @@ var WirelessHID = GObject.registerClass({
                   this.menu.addMenuItem(this._devices[device.native_path].createItem());
                   this._devices[device.native_path].visible = true;
                 }
-                //Uses _update() to avoid cutting timeout short
+                // Uses _update() to avoid cutting timeout short
                 this._devices[device.native_path]._update();
                 this.checkVisibility();
             }
@@ -386,7 +395,7 @@ var WirelessHID = GObject.registerClass({
             }
         );
 
-        //Refresh device with signals now connected
+        // Refresh device with signals now connected
         this._devices[device.native_path].refresh();
 
         this._devices[device.native_path].connect('destroy',
@@ -423,10 +432,6 @@ var WirelessHID = GObject.registerClass({
 
             // Add new devices
             for (let i = 0; i < freshDevices.length; i++) {
-                if (freshDevices[i].model.length === 0) {
-                    continue;
-                }
-
                 let found = false;
                 for (let j in this._devices) {
                     if (this._devices[j].nativePath === freshDevices[i].native_path) {
