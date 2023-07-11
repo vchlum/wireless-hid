@@ -131,8 +131,8 @@ var HID = GObject.registerClass({
           return false;
         }
 
-        //Some devices report 'present' as true, even if no battery is present
-        //To try work-around this, hide devices with an unknown battery state if enabled
+        // Some devices report 'present' as true, even if no battery is present
+        // To try work-around this, hide devices with an unknown battery state if enabled
         if (this._settings.get_boolean('hide-unknown-battery-state')) {
             if (this.device.state === UPowerGlib.DeviceState.UNKNOWN) {
                 return false;
@@ -157,13 +157,13 @@ var HID = GObject.registerClass({
     }
 
     refresh() {
-        //If a timeout is already set, remove it
+        // If a timeout is already set, remove it
         if (this._timeoutUpdateTimeoutId != null) {
             GLib.Source.remove(this._timeoutUpdateTimeoutId);
             this._timeoutUpdateTimeoutId = null;
         }
 
-        //If enabled, create a timer to hide the device if it's not cancelled by an update
+        // If enabled, create a timer to hide the device if it's not cancelled by an update
         let deviceTimeoutLength = this._settings.get_int('device-update-timeout') * 1000;
         if (deviceTimeoutLength != 0) {
             this._timeoutUpdateTimeoutId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, deviceTimeoutLength, () => {
@@ -381,7 +381,7 @@ var WirelessHID = GObject.registerClass({
                   this.menu.addMenuItem(this._devices[device.native_path].createItem());
                   this._devices[device.native_path].visible = true;
                 }
-                //Uses _update() to avoid cutting timeout short
+                // Uses _update() to avoid cutting timeout short
                 this._devices[device.native_path]._update();
                 this.checkVisibility();
             }
@@ -395,7 +395,7 @@ var WirelessHID = GObject.registerClass({
             }
         );
 
-        //Refresh device with signals now connected
+        // Refresh device with signals now connected
         this._devices[device.native_path].refresh();
 
         this._devices[device.native_path].connect('destroy',
