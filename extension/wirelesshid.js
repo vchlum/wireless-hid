@@ -423,7 +423,9 @@ var WirelessHID = GObject.registerClass({
 
             // Add new devices
             for (let i = 0; i < freshDevices.length; i++) {
-                if (freshDevices[i].model.length === 0) {
+                if (freshDevices.model === null) {
+                    continue;
+                } else if (freshDevices[i].model.length === 0) {
                     continue;
                 }
 
