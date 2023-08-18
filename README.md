@@ -31,11 +31,6 @@
   - `make`
   - `gnome-shell` (`gnome-extensions` command)
 
-## Development dependencies
-  - This is only required for the `gtk4` build target
-    - If you don't know what that is, you don't need this
-  - `libgtk-4-bin`
-
 ## Extension settings:
   > Hide unknown battery states:
   - Some devices misreport disconnected batteries as connected

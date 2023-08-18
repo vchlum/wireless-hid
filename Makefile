@@ -6,7 +6,7 @@ PNG_FILES = $(wildcard ./docs/*.png)
 RAW_PATH = "$(BUILD_DIR)/$(UUID).shell-extension.zip"
 BUNDLE_PATH = "$(BUILD_DIR)/$(UUID).zip"
 
-.PHONY: build package check release gtk4 install uninstall clean
+.PHONY: build package check release install uninstall clean
 
 build: clean
 	@mkdir -p $(BUILD_DIR)
@@ -20,7 +20,7 @@ package:
 	--extra-source=../LICENSE \
 	--extra-source=../CHANGELOG.md \
 	--extra-source=../README.md \
-	--extra-source=ui/ \
+	--extra-source=prefs-adw1.ui \
 	--extra-source=wirelesshid.js \
 	--extra-source=prefs.css \
 	-o ../$(BUILD_DIR)/
@@ -30,8 +30,6 @@ check:
 	elif [[ "$$(stat -c %s $(BUNDLE_PATH))" -gt 4096000 ]]; then \
 	  echo -e "\nWARNING! The extension is too big to be uploaded to the extensions website, keep it smaller than 4096 KB"; exit 1; \
 	fi
-gtk4:
-	gtk4-builder-tool simplify --3to4 extension/ui/prefs-gtk3.ui > extension/ui/prefs-gtk4.ui
 install:
 	@if [[ ! -f $(BUNDLE_PATH) ]]; then \
 	  $(MAKE) build; \
