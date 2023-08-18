@@ -6,13 +6,7 @@
     "version": 14,
     "original-author": "chlumskyvaclav@gmail.com",
     "shell-version": [
-      "3.36",
-      "3.38",
-      "40",
-      "41",
-      "42",
-      "43",
-      "44"
+      "45"
     ],
     "gettext-domain": "wireless-hid",
     "url": "https://github.com/vchlum/wireless-hid"
