@@ -33,15 +33,17 @@
  * THE SOFTWARE.
  */
 
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
+import Gdk from 'gi://Gdk';
+import Gtk from 'gi://Gtk';
+import Gio from 'gi://Gio';
+import Adw from 'gi://Adw';
 
-const { Gdk, Gtk, Gio } = imports.gi;
-const Adw = imports.gi.Adw;
+import { ExtensionPreferences } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 var PrefsPage = class PrefsPage {
-    constructor() {
-        this._settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.wireless-hid');
+    constructor(settings, path) {
+        this._settings = settings;
+        this._path = path;
 
         // Create a new Builder to load UI
         this._builder = new Gtk.Builder();
@@ -51,7 +53,7 @@ var PrefsPage = class PrefsPage {
 
     createPreferences() {
         // Load libadwaita UI file
-        this._builder.add_from_file(Me.path + '/ui/prefs-adw1.ui');
+        this._builder.add_from_file(this._path + '/ui/prefs-adw1.ui');
 
         // Get the settings container widget
         this.preferencesWidget = this._builder.get_object('main-prefs');
@@ -91,10 +93,11 @@ var PrefsPage = class PrefsPage {
     }
 }
 
-//Create preferences window
-function fillPreferencesWindow(window) {
-    let prefsPage = new PrefsPage();
-    window.set_default_size(600, 435);
-    window.add(prefsPage.preferencesWidget);
+export default class ExtensionPrefs extends ExtensionPreferences {
+    //Create preferences window
+    fillPreferencesWindow(window) {
+        let prefsPage = new PrefsPage(this.getSettings(), this.path);
+        window.set_default_size(600, 435);
+        window.add(prefsPage.preferencesWidget);
+    }
 }
-
