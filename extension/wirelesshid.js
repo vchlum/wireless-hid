@@ -33,13 +33,15 @@
  * THE SOFTWARE.
  */
 
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
-const Main = imports.ui.main;
-const PanelMenu = imports.ui.panelMenu;
-const PopupMenu = imports.ui.popupMenu;
+import St from 'gi://St';
+import GLib from 'gi://GLib';
+import GObject from 'gi://GObject';
+import UPowerGlib from 'gi://UPowerGlib';
+import Clutter from 'gi://Clutter';
 
-const { St, GLib, GObject, UPowerGlib, Clutter } = imports.gi;
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
+import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 
 var HID = GObject.registerClass({
     Signals: {
@@ -49,7 +51,7 @@ var HID = GObject.registerClass({
         'destroy': {}
     }
 }, class HID extends GObject.Object {
-    _init(device) {
+    _init(device, settings) {
         super._init();
 
         this.device = device;
@@ -61,7 +63,7 @@ var HID = GObject.registerClass({
         this._signals = {};
         this._timeoutUpdateTimeoutId = null;
 
-        this._settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.wireless-hid');
+        this._settings = settings;
 
         this._connectSignals();
     }
@@ -318,7 +320,7 @@ var HID = GObject.registerClass({
  * @constructor
  * @return {Object} menu widget instance
  */
-var WirelessHID = GObject.registerClass({
+export var WirelessHID = GObject.registerClass({
     GTypeName: 'WirelessHID'
 }, class WirelessHID extends PanelMenu.Button {
 
@@ -328,12 +330,12 @@ var WirelessHID = GObject.registerClass({
      * @method _init
      * @private
      */
-    _init() {
+    _init(name, settings) {
 
-        super._init(0.0, Me.metadata.name, false);
+        super._init(0.0, name, false);
 
         // Get saved settings
-        this._settings = ExtensionUtils.getSettings();
+        this._settings = settings;
         this._getPrefs();
 
         // Connect to the changed signal
