@@ -42,15 +42,6 @@ const MessageTray = imports.ui.messageTray;
 var hid; /* main widget */
 
 /**
- * This function is called once the extension is loaded, not enabled.
- *
- * @method init
- */
-function init() {
-    ExtensionUtils.initTranslations();
-}
-
-/**
  * This function could be called after the extension is enabled.
  *
  * @method enable
