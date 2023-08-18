@@ -53,7 +53,7 @@ var PrefsPage = class PrefsPage {
 
     createPreferences() {
         // Load libadwaita UI file
-        this._builder.add_from_file(this._path + '/ui/prefs-adw1.ui');
+        this._builder.add_from_file(this._path + '/prefs-adw1.ui');
 
         // Get the settings container widget
         this.preferencesWidget = this._builder.get_object('main-prefs');
