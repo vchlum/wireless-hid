@@ -10,7 +10,6 @@ BUNDLE_PATH = "$(BUILD_DIR)/$(UUID).zip"
 
 build: clean
 	@mkdir -p $(BUILD_DIR)
-	glib-compile-schemas --strict extension/schemas --targetdir $(BUILD_DIR)
 	$(MAKE) package
 	@mv -v $(RAW_PATH) $(BUNDLE_PATH)
 package:
