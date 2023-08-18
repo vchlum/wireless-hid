@@ -33,36 +33,24 @@
  * THE SOFTWARE.
  */
 
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
-const WirelessHID = Me.imports.wirelesshid;
-const Main = imports.ui.main;
-const MessageTray = imports.ui.messageTray;
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import * as WirelessHID from './wirelesshid.js';
 
-var hid; /* main widget */
+import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-/**
- * This function could be called after the extension is enabled.
- *
- * @method enable
- */
-function enable() {
-    hid = new WirelessHID.WirelessHID();
+export default class WirelessHIDExtension extends Extension {
+    enable() {
+        this._hid = new WirelessHID.WirelessHID(this.metadata.name, this.getSettings());
 
-    Main.panel.addToStatusArea('wireless-hid', hid);
-    hid.checkVisibility();
+        Main.panel.addToStatusArea('wireless-hid', this._hid);
+        this._hid.checkVisibility();
 
-    /* Get stored settings and change actor position in panel */
-    hid._getPrefs();
-    hid._resetPanelPos();
-}
+        /* Get stored settings and change actor position in panel */
+        this._hid._getPrefs();
+        this._hid._resetPanelPos();
+    }
 
-/**
- * This function could be called after the extension is uninstalled,
- * disabled GNOME Tweaks, when you log out or when the screen locks.
- *
- * @method disable
- */
-function disable() {
-    hid.destroy();
+    disable() {
+        this._hid.destroy();
+    }
 }
