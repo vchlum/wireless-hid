@@ -92,7 +92,7 @@ var PrefsPage = class PrefsPage {
     }
 }
 
-export default class ExtensionPrefs extends ExtensionPreferences {
+export default class WirelessHIDPrefs extends ExtensionPreferences {
     //Create preferences window
     fillPreferencesWindow(window) {
         let prefsPage = new PrefsPage(this.getSettings(), this.path);
