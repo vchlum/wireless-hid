@@ -370,7 +370,7 @@ export var WirelessHID = GObject.registerClass({
     }
 
     newDevice(device) {
-        this._devices[device.native_path] = new HID(device);
+        this._devices[device.native_path] = new HID(device, this._settings);
 
         this._panelBox.add(this._devices[device.native_path].createIcon());
         this.menu.addMenuItem(this._devices[device.native_path].createItem());
