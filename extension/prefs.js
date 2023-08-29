@@ -4,15 +4,15 @@
  * extension wireless-hid
  * JavaScript Gnome extension for wireless keyboards and mice.
  *
- * @author Václav Chlumský
- * @copyright Copyright 2021, Václav Chlumský.
+ * @author Václav Chlumský, Stuart Hayhurst
+ * @copyright Copyright 2023, Václav Chlumský.
  */
 
  /**
  * @license
  * The MIT License (MIT)
  *
- * Copyright (c) 2021 Václav Chlumský
+ * Copyright (c) 2023 Václav Chlumský
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
