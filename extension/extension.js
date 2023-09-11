@@ -52,5 +52,6 @@ export default class WirelessHIDExtension extends Extension {
 
     disable() {
         this._hid.destroy();
+        this._hid = null;
     }
 }
