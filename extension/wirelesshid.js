@@ -477,11 +477,6 @@ export var WirelessHID = GObject.registerClass({
             this._settingsChangedId = 0;
         }
 
-        if (this._settings) {
-            this._settings.run_dispose();
-            this._settings = null;
-        }
-
         for (let deviceId in this._devices) {
           this._devices[deviceId].destroy();
         }
