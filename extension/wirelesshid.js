@@ -39,12 +39,9 @@ import GObject from 'gi://GObject';
 import UPowerGlib from 'gi://UPowerGlib';
 import Clutter from 'gi://Clutter';
 
-import * as Config from 'resource:///org/gnome/shell/misc/config.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
-
-const ShellVersion = parseFloat(Config.PACKAGE_VERSION);
 
 var HID = GObject.registerClass({
     Signals: {
@@ -489,11 +486,7 @@ export var WirelessHID = GObject.registerClass({
     }
 
     _resetPanelPos() {
-        if (ShellVersion >= 46) {
-            this.container.get_parent().remove_child(this.container);
-        } else {
-            this.container.get_parent().remove_actor(this.container);
-        }
+        this.container.get_parent().remove_child(this.container);
 
         // Small HACK with private boxes :)
         let boxes = {
