@@ -40,8 +40,8 @@ import UPowerGlib from 'gi://UPowerGlib';
 import Clutter from 'gi://Clutter';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
+import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
 var HID = GObject.registerClass({
     Signals: {
@@ -270,9 +270,9 @@ var HID = GObject.registerClass({
             x_align: Clutter.ActorAlign.START
         });
         name.set_x_expand(true);
-        this.item.add(name);
+        this.item.add_child(name);
 
-        this.item.add(this.createLabel());
+        this.item.add_child(this.createLabel());
 
         return this.item;
     }
@@ -326,7 +326,7 @@ export var WirelessHID = GObject.registerClass({
 
     /*
      * WirelessHID class initialization
-     *  
+     *
      * @method _init
      * @private
      */
@@ -372,16 +372,17 @@ export var WirelessHID = GObject.registerClass({
     newDevice(device) {
         this._devices[device.native_path] = new HID(device, this._settings);
 
-        this._panelBox.add(this._devices[device.native_path].createIcon());
+        this._panelBox.add_child(this._devices[device.native_path].createIcon());
+
         this.menu.addMenuItem(this._devices[device.native_path].createItem());
         this._devices[device.native_path].visible = true;
 
         this._devices[device.native_path].connect('show',
             () => {
                 if (!this._devices[device.native_path].visible) {
-                  this._panelBox.add(this._devices[device.native_path].createIcon());
-                  this.menu.addMenuItem(this._devices[device.native_path].createItem());
-                  this._devices[device.native_path].visible = true;
+                    this._panelBox.add_child(this._devices[device.native_path].createIcon());
+                    this.menu.addMenuItem(this._devices[device.native_path].createItem());
+                    this._devices[device.native_path].visible = true;
                 }
                 // Uses _update() to avoid cutting timeout short
                 this._devices[device.native_path]._update();
@@ -403,9 +404,9 @@ export var WirelessHID = GObject.registerClass({
         this._devices[device.native_path].connect('destroy',
             () => {
                 if (this._devices[device.native_path].visible) {
-                  this._panelBox.remove_child(this._devices[device.native_path].icon);
-                  this._devices[device.native_path].clean();
-                  this.checkVisibility();
+                    this._panelBox.remove_child(this._devices[device.native_path].icon);
+                    this._devices[device.native_path].clean();
+                    this.checkVisibility();
                 }
             }
         );
@@ -485,7 +486,7 @@ export var WirelessHID = GObject.registerClass({
     }
 
     _resetPanelPos() {
-        this.container.get_parent().remove_actor(this.container);
+        this.container.get_parent().remove_child(this.container);
 
         // Small HACK with private boxes :)
         let boxes = {
