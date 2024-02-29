@@ -1,3 +1,5 @@
+## Version 17
+ * Gnome 46 support - (Thx to @stuarthayhurst)
 ## Version 16
  * Fix warnings when disabling extension
 ## Version 15
