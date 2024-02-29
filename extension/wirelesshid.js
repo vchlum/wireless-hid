@@ -375,16 +375,24 @@ export var WirelessHID = GObject.registerClass({
     newDevice(device) {
         this._devices[device.native_path] = new HID(device, this._settings);
 
-        this._panelBox.add(this._devices[device.native_path].createIcon());
+        if (ShellVersion >= 46) {
+            this._panelBox.add_child(this._devices[device.native_path].createIcon());
+        } else {
+            this._panelBox.add(this._devices[device.native_path].createIcon());
+        }
         this.menu.addMenuItem(this._devices[device.native_path].createItem());
         this._devices[device.native_path].visible = true;
 
         this._devices[device.native_path].connect('show',
             () => {
                 if (!this._devices[device.native_path].visible) {
-                  this._panelBox.add(this._devices[device.native_path].createIcon());
-                  this.menu.addMenuItem(this._devices[device.native_path].createItem());
-                  this._devices[device.native_path].visible = true;
+                    if (ShellVersion >= 46) {
+                        this._panelBox.add_child(this._devices[device.native_path].createIcon());
+                    } else {
+                        this._panelBox.add(this._devices[device.native_path].createIcon());
+                    }
+                    this.menu.addMenuItem(this._devices[device.native_path].createItem());
+                    this._devices[device.native_path].visible = true;
                 }
                 // Uses _update() to avoid cutting timeout short
                 this._devices[device.native_path]._update();
@@ -406,9 +414,9 @@ export var WirelessHID = GObject.registerClass({
         this._devices[device.native_path].connect('destroy',
             () => {
                 if (this._devices[device.native_path].visible) {
-                  this._panelBox.remove_child(this._devices[device.native_path].icon);
-                  this._devices[device.native_path].clean();
-                  this.checkVisibility();
+                    this._panelBox.remove_child(this._devices[device.native_path].icon);
+                    this._devices[device.native_path].clean();
+                    this.checkVisibility();
                 }
             }
         );
