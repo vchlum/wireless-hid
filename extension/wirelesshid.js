@@ -273,9 +273,9 @@ var HID = GObject.registerClass({
             x_align: Clutter.ActorAlign.START
         });
         name.set_x_expand(true);
-        this.item.add(name);
+        this.item.add_child(name);
 
-        this.item.add(this.createLabel());
+        this.item.add_child(this.createLabel());
 
         return this.item;
     }
@@ -375,22 +375,15 @@ export var WirelessHID = GObject.registerClass({
     newDevice(device) {
         this._devices[device.native_path] = new HID(device, this._settings);
 
-        if (ShellVersion >= 46) {
-            this._panelBox.add_child(this._devices[device.native_path].createIcon());
-        } else {
-            this._panelBox.add(this._devices[device.native_path].createIcon());
-        }
+        this._panelBox.add_child(this._devices[device.native_path].createIcon());
+
         this.menu.addMenuItem(this._devices[device.native_path].createItem());
         this._devices[device.native_path].visible = true;
 
         this._devices[device.native_path].connect('show',
             () => {
                 if (!this._devices[device.native_path].visible) {
-                    if (ShellVersion >= 46) {
-                        this._panelBox.add_child(this._devices[device.native_path].createIcon());
-                    } else {
-                        this._panelBox.add(this._devices[device.native_path].createIcon());
-                    }
+                    this._panelBox.add_child(this._devices[device.native_path].createIcon());
                     this.menu.addMenuItem(this._devices[device.native_path].createItem());
                     this._devices[device.native_path].visible = true;
                 }
