@@ -84,15 +84,11 @@ var HID = GObject.registerClass({
         this._signals[signal] = this._settings;
     }
 
-    getBattery() {
-        return this.device.percentage;
-    }
-
     _getColorEffect() {
         let color;
-        if (this.percentage <= 10) {
+        if (this.device.percentage <= 10) {
             color = Clutter.Color.new(255, 0, 0, 255);
-        } else if (this.percentage <= 30) {
+        } else if (this.device.percentage <= 30) {
             color = Clutter.Color.new(255, 165, 0, 255);
         } else {
             return null;
@@ -137,10 +133,8 @@ var HID = GObject.registerClass({
     }
 
     _updateLabel() {
-        this.percentage = this.getBattery();
-
         if (this.label !== null) {
-            this.label.text = `${this.percentage}%`;
+            this.label.text = `${this.device.percentage}%`;
         }
     }
 
