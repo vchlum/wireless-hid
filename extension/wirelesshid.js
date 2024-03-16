@@ -86,9 +86,9 @@ var HID = GObject.registerClass({
 
     _getColorEffect() {
         let color;
-        if (this.device.percentage <= 10) {
+        if (this.device.percentage <= 5) {
             color = Clutter.Color.new(255, 0, 0, 255);
-        } else if (this.device.percentage <= 30) {
+        } else if (this.device.percentage <= 20) {
             color = Clutter.Color.new(255, 165, 0, 255);
         } else {
             return null;
