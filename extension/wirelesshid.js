@@ -88,31 +88,17 @@ var HID = GObject.registerClass({
         return this.device.percentage;
     }
 
-    getColorEffect(percentage) {
-        let r;
-        let g;
-        let b;
-
-        if (percentage <= 10) {
-            r = 255;
-            g = 0;
-            b = 0;
-        } else if (percentage <= 30) {
-            r = 255;
-            g = 165;
-            b = 0;
+    _getColorEffect() {
+        let color;
+        if (this.percentage <= 10) {
+            color = Clutter.Color.new(255, 0, 0, 255);
+        } else if (this.percentage <= 30) {
+            color = Clutter.Color.new(255, 165, 0, 255);
         } else {
             return null;
         }
 
-        let color = new Clutter.Color({
-            red: r,
-            green: g,
-            blue: b,
-            alpha: 255
-        });
-
-        return new Clutter.ColorizeEffect({tint: color});
+        return Clutter.ColorizeEffect.new(color);
     }
 
     _shouldBatteryVisible() {
@@ -184,7 +170,7 @@ var HID = GObject.registerClass({
         if (this.icon !== null) {
             this.icon.clear_effects();
 
-            let colorEffect = this.getColorEffect(this.percentage);
+            let colorEffect = this._getColorEffect();
             if (colorEffect) {
                 this.icon.add_effect(colorEffect);
             }
