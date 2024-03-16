@@ -320,7 +320,7 @@ export var WirelessHID = GObject.registerClass({
         // Connect to the changed signal
         this._settingsChangedId = this._settings.connect(
             'changed',
-            this._resetPanelPos.bind(this)
+            this.resetPanelPos.bind(this)
         );
 
         this._upowerClient = UPowerGlib.Client.new_full(null);
@@ -364,7 +364,7 @@ export var WirelessHID = GObject.registerClass({
                 }
                 // Uses _update() to avoid cutting timeout short
                 this._devices[device.native_path]._update();
-                this.checkVisibility();
+                this.updateVisibility();
             }
         );
 
@@ -372,7 +372,7 @@ export var WirelessHID = GObject.registerClass({
             () => {
                 this._panelBox.remove_child(this._devices[device.native_path].icon);
                 this._devices[device.native_path].clean();
-                this.checkVisibility();
+                this.updateVisibility();
             }
         );
 
@@ -384,7 +384,7 @@ export var WirelessHID = GObject.registerClass({
                 if (this._devices[device.native_path].visible) {
                     this._panelBox.remove_child(this._devices[device.native_path].icon);
                     this._devices[device.native_path].clean();
-                    this.checkVisibility();
+                    this.updateVisibility();
                 }
             }
         );
@@ -427,11 +427,11 @@ export var WirelessHID = GObject.registerClass({
             }
 
             this._updatingDevices = false;
-            this.checkVisibility();
+            this.updateVisibility();
         }
     }
 
-    checkVisibility() {
+    updateVisibility() {
         if (Main.panel.statusArea['wireless-hid'] === undefined) {
             return;
         }
@@ -445,6 +445,21 @@ export var WirelessHID = GObject.registerClass({
         }
 
         Main.panel.statusArea['wireless-hid'].visible = showDevices;
+    }
+
+    resetPanelPos() {
+        this.container.get_parent().remove_child(this.container);
+
+        // Small HACK with private boxes :)
+        let boxes = {
+            left: Main.panel._leftBox,
+            center: Main.panel._centerBox,
+            right: Main.panel._rightBox
+        };
+
+        let position = this._settings.get_string('position-in-panel').toLowerCase();
+        let index = this._settings.get_int('panel-box-index');
+        boxes[position].insert_child_at_index(this.container, index);
     }
 
     _onDestroy() {
@@ -461,20 +476,5 @@ export var WirelessHID = GObject.registerClass({
         }
 
         super._onDestroy();
-    }
-
-    _resetPanelPos() {
-        this.container.get_parent().remove_child(this.container);
-
-        // Small HACK with private boxes :)
-        let boxes = {
-            left: Main.panel._leftBox,
-            center: Main.panel._centerBox,
-            right: Main.panel._rightBox
-        };
-
-        let position = this._settings.get_string('position-in-panel').toLowerCase();
-        let index = this._settings.get_int('panel-box-index');
-        boxes[position].insert_child_at_index(this.container, index);
     }
 });

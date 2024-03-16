@@ -42,11 +42,10 @@ export default class WirelessHIDExtension extends Extension {
     enable() {
         this._hid = new WirelessHID.WirelessHID(this.metadata.name, this.getSettings());
 
+        /* Add indicator to correct position in the panel */
         Main.panel.addToStatusArea('wireless-hid', this._hid);
-        this._hid.checkVisibility();
-
-        /* Change actor position in panel */
-        this._hid._resetPanelPos();
+        this._hid.updateVisibility();
+        this._hid.resetPanelPos();
     }
 
     disable() {
