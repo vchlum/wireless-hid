@@ -45,8 +45,7 @@ export default class WirelessHIDExtension extends Extension {
         Main.panel.addToStatusArea('wireless-hid', this._hid);
         this._hid.checkVisibility();
 
-        /* Get stored settings and change actor position in panel */
-        this._hid._getPrefs();
+        /* Change actor position in panel */
         this._hid._resetPanelPos();
     }
 

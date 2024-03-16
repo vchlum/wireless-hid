@@ -316,14 +316,12 @@ export var WirelessHID = GObject.registerClass({
 
         // Get saved settings
         this._settings = settings;
-        this._getPrefs();
 
         // Connect to the changed signal
         this._settingsChangedId = this._settings.connect(
-            'changed', () => {
-            this._getPrefs();
-            this._resetPanelPos();
-        });
+            'changed',
+            this._resetPanelPos.bind(this)
+        );
 
         this._upowerClient = UPowerGlib.Client.new_full(null);
         this._devices = {};
@@ -475,14 +473,8 @@ export var WirelessHID = GObject.registerClass({
             right: Main.panel._rightBox
         };
 
-        let p = this._menuPosition;
-        let i = this._menuBoxIndex;
-        boxes[p].insert_child_at_index(this.container, i);
-    }
-
-    _getPrefs() {
-        // Get stored settings
-        this._menuPosition = this._settings.get_string('position-in-panel').toLowerCase();
-        this._menuBoxIndex = this._settings.get_int('panel-box-index');
+        let position = this._settings.get_string('position-in-panel').toLowerCase();
+        let index = this._settings.get_int('panel-box-index');
+        boxes[position].insert_child_at_index(this.container, index);
     }
 });
