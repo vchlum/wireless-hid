@@ -33,7 +33,6 @@
  * THE SOFTWARE.
  */
 
-import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as WirelessHID from './wirelesshid.js';
 
 import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
@@ -43,9 +42,8 @@ export default class WirelessHIDExtension extends Extension {
         this._hid = new WirelessHID.WirelessHID(this.metadata.name, this.getSettings());
 
         /* Add indicator to correct position in the panel */
-        Main.panel.addToStatusArea('wireless-hid', this._hid);
+        this._hid.updatePanelPosition();
         this._hid.updateVisibility();
-        this._hid.resetPanelPos();
     }
 
     disable() {
