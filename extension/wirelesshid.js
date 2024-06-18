@@ -320,7 +320,7 @@ export var WirelessHID = GObject.registerClass({
         // Connect to the changed signal
         this._settingsChangedId = this._settings.connect(
             'changed',
-            this.resetPanelPos.bind(this)
+            this.updatePanelPosition.bind(this)
         );
 
         this._upowerClient = UPowerGlib.Client.new_full(null);
@@ -447,19 +447,11 @@ export var WirelessHID = GObject.registerClass({
         Main.panel.statusArea['wireless-hid'].visible = showDevices;
     }
 
-    resetPanelPos() {
-        this.container.get_parent().remove_child(this.container);
-
-        // Small HACK with private boxes :)
-        let boxes = {
-            left: Main.panel._leftBox,
-            center: Main.panel._centerBox,
-            right: Main.panel._rightBox
-        };
-
+    updatePanelPosition() {
+        // Add the container to the correct box
         let position = this._settings.get_string('position-in-panel').toLowerCase();
         let index = this._settings.get_int('panel-box-index');
-        boxes[position].insert_child_at_index(this.container, index);
+        Main.panel.addToStatusArea('wireless-hid', this, index, position);
     }
 
     _onDestroy() {
@@ -472,7 +464,7 @@ export var WirelessHID = GObject.registerClass({
         }
 
         for (let deviceId in this._devices) {
-          this._devices[deviceId].destroy();
+            this._devices[deviceId].destroy();
         }
 
         super._onDestroy();
