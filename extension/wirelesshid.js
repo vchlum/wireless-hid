@@ -38,10 +38,14 @@ import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
 import UPowerGlib from 'gi://UPowerGlib';
 import Clutter from 'gi://Clutter';
+import Cogl from 'gi://Cogl';
 
+import * as Config from 'resource:///org/gnome/shell/misc/config.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
+
+const ShellVersion = parseFloat(Config.PACKAGE_VERSION);
 
 var HID = GObject.registerClass({
     Signals: {
@@ -87,9 +91,17 @@ var HID = GObject.registerClass({
     _getColorEffect() {
         let color;
         if (this.device.warning_level === UPowerGlib.DeviceLevel.CRITICAL) {
-            color = Clutter.Color.new(255, 0, 0, 255);
+            if (ShellVersion >= 47) {
+                color = Cogl.Color.from_string('#ff0000ff')[1];
+            } else {
+                color = Clutter.Color.new(255, 0, 0, 255);
+            }
         } else if (this.device.warning_level === UPowerGlib.DeviceLevel.LOW) {
-            color = Clutter.Color.new(255, 165, 0, 255);
+            if (ShellVersion >= 47) {
+                color = Cogl.Color.from_string('#ffa500ff')[1];
+            } else {
+                color = Clutter.Color.new(255, 165, 0, 255);
+            }
         } else {
             return null;
         }
