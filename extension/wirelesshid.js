@@ -89,14 +89,31 @@ var HID = GObject.registerClass({
     }
 
     _getColorEffect() {
+        // Decide the level
+        let level = 'normal';
+        if (this._settings.get_boolean('use-device-levels')) {
+            if (this.device.warning_level === UPowerGlib.DeviceLevel.CRITICAL) {
+                level = 'critical';
+            } else if (this.device.warning_level === UPowerGlib.DeviceLevel.LOW) {
+                level = 'low';
+            }
+        } else {
+            if (this.device.percentage <= 5) {
+                level = 'critical';
+            } else if (this.device.percentage <= 20) {
+                level = 'low';
+            }
+        }
+
+        //Decide colour, or return
         let color;
-        if (this.device.warning_level === UPowerGlib.DeviceLevel.CRITICAL) {
+        if (level === 'critical') {
             if (ShellVersion >= 47) {
                 color = Cogl.Color.from_string('#ff0000ff')[1];
             } else {
                 color = Clutter.Color.new(255, 0, 0, 255);
             }
-        } else if (this.device.warning_level === UPowerGlib.DeviceLevel.LOW) {
+        } else if (level === 'low') {
             if (ShellVersion >= 47) {
                 color = Cogl.Color.from_string('#ffa500ff')[1];
             } else {

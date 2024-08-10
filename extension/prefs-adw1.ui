@@ -19,6 +19,18 @@
         <property name="title" translatable="yes">General settings</property>
         <child>
           <object class="AdwActionRow">
+            <property name="title" translatable="yes">Use device reported warning levels</property>
+            <property name="subtitle" translatable="yes">Use the device reported low battery warnings (not all devices report these)</property>
+            <property name="activatable-widget">use-device-levels-switch</property>
+            <child>
+              <object class="GtkSwitch" id="use-device-levels-switch">
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwActionRow">
             <property name="title" translatable="yes">Hide devices with an unknown battery state (may cause issues)</property>
             <property name="subtitle" translatable="yes">Some devices misreport the battery state, this setting attempts to detect and hide these</property>
             <property name="activatable-widget">hide-unknown-states-switch</property>

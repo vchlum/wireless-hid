@@ -6,6 +6,11 @@
     <value value="2" nick="Right"/>
   </enum>
   <schema id="org.gnome.shell.extensions.wireless-hid" path="/org/gnome/shell/extensions/wireless-hid/">
+    <key name="use-device-levels" type="b">
+      <default>false</default>
+      <summary>Use device reported warning levels</summary>
+      <description>Use the device reported low battery warnings (not all devices report these)</description>
+    </key>
     <key name="hide-unknown-battery-state" type="b">
       <default>false</default>
       <summary>Hide devices with an unknown battery state (may cause issues)</summary>
