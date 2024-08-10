@@ -32,13 +32,16 @@
   - `gnome-shell` (`gnome-extensions` command)
 
 ## Extension settings:
+  > Use device reported warning levels:
+  - Some devices report low battery warnings, others don't
+    - This setting tells the extension to use these for warnings, instead of a percentage
   > Hide unknown battery states:
   - Some devices misreport disconnected batteries as connected
     - To work around this, devices with un unknown battery state can optionally be hidden
     - This is off by default, as it can cause issues and hide some working devices
   > Hide ELAN devices:
   - Some ELAN devices don't report a charge
-    - This setting hides these devices:
+    - This setting hides these devices
   > Hide old devices after a timeout
   - Some devices don't disconnect correctly
     - This setting hides devices that don't update after a length of time

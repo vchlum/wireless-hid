@@ -58,6 +58,10 @@ var PrefsPage = class PrefsPage {
         this.preferencesWidget = this._builder.get_object('main-prefs');
 
         this.settingElements = {
+            'use-device-levels-switch': {
+                'settingKey': 'use-device-levels',
+                'bindProperty': 'active'
+            },
             'hide-unknown-states-switch': {
                 'settingKey': 'hide-unknown-battery-state',
                 'bindProperty': 'active'
