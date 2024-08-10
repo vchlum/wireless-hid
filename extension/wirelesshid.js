@@ -80,12 +80,6 @@ var HID = GObject.registerClass({
             this.refresh.bind(this)
         );
         this._signals[signal] = this.device;
-
-        signal = this._settings.connect(
-            'changed',
-            this.refresh.bind(this)
-        );
-        this._signals[signal] = this._settings;
     }
 
     _getColorEffect() {
@@ -346,11 +340,7 @@ export var WirelessHID = GObject.registerClass({
         // Get saved settings
         this._settings = settings;
 
-        // Connect to the changed signal
-        this._settingsChangedId = this._settings.connect(
-            'changed',
-            this.updatePanelPosition.bind(this)
-        );
+
 
         this._upowerClient = UPowerGlib.Client.new_full(null);
         this._devices = {};
@@ -486,11 +476,6 @@ export var WirelessHID = GObject.registerClass({
     _onDestroy() {
         this._upowerClient.disconnect(this._deviceAddedSignal);
         this._upowerClient.disconnect(this._deviceRemovedSignal);
-
-        if (this._settingsChangedId) {
-            this._settings.disconnect(this._settingsChangedId);
-            this._settingsChangedId = 0;
-        }
 
         for (let deviceId in this._devices) {
             this._devices[deviceId].destroy();
