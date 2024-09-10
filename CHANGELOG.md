@@ -1,3 +1,8 @@
+## Version 19
+ - (Thx to @stuarthayhurst)
+ * add support for GNOME 47
+ * add setting to toggle device reported warning levels
+ * reload entire extension when settings change
 ## Version 18
  - (Thx to @stuarthayhurst)
  * refactor getColorEffect()
