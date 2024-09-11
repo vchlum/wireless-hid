@@ -61,5 +61,6 @@ export default class WirelessHIDExtension extends Extension {
         this._settings.disconnect(this._settingsChangedId);
         this._hid.destroy();
         this._hid = null;
+        this._settings = null;
     }
 }
