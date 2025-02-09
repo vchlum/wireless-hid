@@ -1,3 +1,5 @@
+## Version 21
+ * Gnome 48 support
 ## Version 20
  * null out this._settings when extension is disabled
 ## Version 19
