@@ -99,8 +99,8 @@ var HID = GObject.registerClass({
             }
         }
 
-        //Decide colour, or return
-        let color;
+        // Decide low battery colour
+        let color = null;
         if (level === 'critical') {
             if (ShellVersion >= 47) {
                 color = Cogl.Color.from_string('#ff0000ff')[1];
@@ -113,11 +113,25 @@ var HID = GObject.registerClass({
             } else {
                 color = Clutter.Color.new(255, 165, 0, 255);
             }
+        }
+
+        // Decide fully charged colour
+        if (this._settings.get_boolean('highlight-charged-devices')) {
+          if (this.device.state === UPowerGlib.DeviceState.FULLY_CHARGED) {
+            if (ShellVersion >= 47) {
+                color = Cogl.Color.from_string('#00ff00ff')[1];
+            } else {
+                color = Clutter.Color.new(0, 255, 0, 255);
+            }
+          }
+        }
+
+        // Use the colour if we have one
+        if (color !== null) {
+            return Clutter.ColorizeEffect.new(color);
         } else {
             return null;
         }
-
-        return Clutter.ColorizeEffect.new(color);
     }
 
     _shouldBatteryVisible() {

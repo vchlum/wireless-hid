@@ -62,6 +62,10 @@ var PrefsPage = class PrefsPage {
                 'settingKey': 'use-device-levels',
                 'bindProperty': 'active'
             },
+            'highlight-charged-devices-switch': {
+                'settingKey': 'highlight-charged-devices',
+                'bindProperty': 'active'
+            },
             'hide-unknown-states-switch': {
                 'settingKey': 'hide-unknown-battery-state',
                 'bindProperty': 'active'
