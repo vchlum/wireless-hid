@@ -1,3 +1,6 @@
+## Version 22
+ * Gnome 49 support
+ * Show fully charged batteries in green
 ## Version 21
  * Gnome 48 support
 ## Version 20
