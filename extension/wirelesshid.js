@@ -119,9 +119,9 @@ var HID = GObject.registerClass({
         if (this._settings.get_boolean('highlight-charged-devices')) {
           if (this.device.state === UPowerGlib.DeviceState.FULLY_CHARGED) {
             if (ShellVersion >= 47) {
-                color = Cogl.Color.from_string('#00ff00ff')[1];
+                color = Cogl.Color.from_string('#12ea12ff')[1];
             } else {
-                color = Clutter.Color.new(0, 255, 0, 255);
+                color = Clutter.Color.new(18, 234, 18, 255);
             }
           }
         }
