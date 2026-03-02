@@ -348,16 +348,14 @@ export var WirelessHID = GObject.registerClass({
      * @private
      */
     _init(name, settings) {
-
         super._init(0.0, name, false);
 
         // Get saved settings
         this._settings = settings;
 
-
-
         this._upowerClient = UPowerGlib.Client.new_full(null);
         this._devices = {};
+        this._deviceSignals = {};
         this._updatingDevices = false;
 
         this._panelBox = new St.BoxLayout({style_class: 'panel-status-menu-box'});
@@ -380,82 +378,92 @@ export var WirelessHID = GObject.registerClass({
         this.discoverDevices();
     }
 
-    newDevice(device) {
-        this._devices[device.native_path] = new HID(device, this._settings);
+    addToBox(deviceId) {
+        this._panelBox.add_child(this._devices[deviceId].createIcon());
+        this.menu.addMenuItem(this._devices[deviceId].createItem());
+        this._devices[deviceId].visible = true;
+    }
 
-        this._panelBox.add_child(this._devices[device.native_path].createIcon());
+    removeFromBox(deviceId) {
+        this._panelBox.remove_child(this._devices[deviceId].icon);
+        this._devices[deviceId].clean();
+        this.updateVisibility();
+    }
 
-        this.menu.addMenuItem(this._devices[device.native_path].createItem());
-        this._devices[device.native_path].visible = true;
+    newDevice(upowerDevice) {
+        this._devices[upowerDevice.native_path] = new HID(upowerDevice, this._settings);
+        let device = this._devices[upowerDevice.native_path];
 
-        this._devices[device.native_path].connect('show',
-            () => {
-                if (!this._devices[device.native_path].visible) {
-                    this._panelBox.add_child(this._devices[device.native_path].createIcon());
-                    this.menu.addMenuItem(this._devices[device.native_path].createItem());
-                    this._devices[device.native_path].visible = true;
+        this.addToBox(device.nativePath);
+
+        const showId = device.connect('show',
+            (hidDevice) => {
+                if (!hidDevice.visible) {
+                    this.addToBox(hidDevice.nativePath);
                 }
-                // Uses _update() to avoid cutting timeout short
-                this._devices[device.native_path]._update();
+
+                // Use _update() to avoid cutting timeout short
+                hidDevice._update();
                 this.updateVisibility();
             }
         );
 
-        this._devices[device.native_path].connect('hide',
-            () => {
-                this._panelBox.remove_child(this._devices[device.native_path].icon);
-                this._devices[device.native_path].clean();
-                this.updateVisibility();
+        const hideId = device.connect('hide',
+            (hidDevice) => {
+                this.removeFromBox(hidDevice.nativePath);
             }
         );
 
         // Refresh device with signals now connected
-        this._devices[device.native_path].refresh();
+        device.refresh();
 
-        this._devices[device.native_path].connect('destroy',
-            () => {
-                if (this._devices[device.native_path].visible) {
-                    this._panelBox.remove_child(this._devices[device.native_path].icon);
-                    this._devices[device.native_path].clean();
-                    this.updateVisibility();
+        const destroyId = device.connect('destroy',
+            (hidDevice) => {
+                if (hidDevice.visible) {
+                    this.removeFromBox(hidDevice.nativePath);
                 }
             }
         );
+
+        this._deviceSignals[device.nativePath] = {
+          'showSignalId': showId,
+          'hideSignalId': hideId,
+          'destroySignalId': destroyId
+        };
     }
 
     discoverDevices() {
         if (!this._updatingDevices) {
             this._updatingDevices = true;
-            let freshDevices = this._upowerClient.get_devices();
+            let upowerDevices = this._upowerClient.get_devices();
 
             // Remove disconnected devices
             for (let j in this._devices) {
                 let found = false;
-                for (let i = 0; i < freshDevices.length; i++) {
-                    if (this._devices[j].nativePath === freshDevices[i].native_path) {
+                for (let i = 0; i < upowerDevices.length; i++) {
+                    if (this._devices[j].nativePath === upowerDevices[i].native_path) {
                         found = true;
                         break;
                     }
                 }
 
                 if (!found) {
-                    this._devices[j].destroy();
-                    delete(this._devices[j]);
+                    this.destroyDevice(j);
                 }
             }
 
             // Add new devices
-            for (let i = 0; i < freshDevices.length; i++) {
+            for (let i = 0; i < upowerDevices.length; i++) {
                 let found = false;
                 for (let j in this._devices) {
-                    if (this._devices[j].nativePath === freshDevices[i].native_path) {
+                    if (this._devices[j].nativePath === upowerDevices[i].native_path) {
                         found = true;
                         break;
                     }
                 }
 
                 if (!found) {
-                    this.newDevice(freshDevices[i]);
+                    this.newDevice(upowerDevices[i]);
                 }
             }
 
@@ -487,12 +495,22 @@ export var WirelessHID = GObject.registerClass({
         Main.panel.addToStatusArea('wireless-hid', this, index, position);
     }
 
+    destroyDevice(deviceId) {
+        this._devices[deviceId].destroy();
+        this._devices[deviceId].disconnect(this._deviceSignals[deviceId].showSignalId);
+        this._devices[deviceId].disconnect(this._deviceSignals[deviceId].hideSignalId);
+        this._devices[deviceId].disconnect(this._deviceSignals[deviceId].destroySignalId);
+
+        delete(this._devices[deviceId]);
+        delete(this._deviceSignals[deviceId]);
+    }
+
     _onDestroy() {
         this._upowerClient.disconnect(this._deviceAddedSignal);
         this._upowerClient.disconnect(this._deviceRemovedSignal);
 
         for (let deviceId in this._devices) {
-            this._devices[deviceId].destroy();
+            this.destroyDevice(deviceId);
         }
 
         super._onDestroy();
