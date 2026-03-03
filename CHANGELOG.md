@@ -1,3 +1,7 @@
+## Version 23
+ * Gnome 50 support
+ * Fix clicking on the 'hide old devices' setting toggling the 'hide ELAN devices' setting
+ * Reduce green status colour
 ## Version 22
  * Gnome 49 support
  * Show fully charged batteries in green
