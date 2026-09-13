@@ -1,0 +1,40 @@
+# This workflow will build the extension and upload an artifact
+name: Build and upload extension
+
+on:
+  push:
+    branches: '**'
+  pull_request:
+    branches: '**'
+
+jobs:
+  build:
+    runs-on: ubuntu-slim
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name
+
+    steps:
+    - uses: actions/checkout@v7
+    - name: Install build dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install --no-install-recommends make gettext gnome-shell
+
+    - name: Build the extension bundle
+      run: |
+        make build
+
+    - name: Run checks on the extension
+      run: |
+        make check
+
+    - name: Run Shexli on the extension
+      uses: stuarthayhurst/shexli-github-action@v1
+      with:
+        path: build/wireless-hid@chlumskyvaclav.gmail.com.zip
+        ignored-checks: 'EGO-M-004'
+
+    - uses: actions/upload-artifact@v7
+      with:
+        name: wireless-hid@chlumskyvaclav.gmail.com.zip
+        path: build/wireless-hid@chlumskyvaclav.gmail.com.zip
+        archive: false
